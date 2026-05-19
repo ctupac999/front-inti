@@ -65,10 +65,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     saveLanguage(lang)
   }
 
-  const messages = useMemo(
-    () => toNestedMessages((translations[language] || translations[defaultLanguage]) as Record<string, string>),
-    [language]
-  )
+  const messages = useMemo(() => {
+    const base = translations[defaultLanguage] as Record<string, string>
+    const lang = translations[language] as Record<string, string> | undefined
+    // Merge: base (es) + language overrides so no keys are ever missing
+    const merged = lang ? { ...base, ...lang } : base
+    return toNestedMessages(merged)
+  }, [language])
 
   const fallbackMessages = useMemo(
     () => toNestedMessages(translations[defaultLanguage] as Record<string, string>),

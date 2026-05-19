@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useAuth } from '@/contexts/auth-context'
@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { toast } from 'sonner'
 import { Sprout, Eye, EyeOff } from 'lucide-react'
+import PhoneInput from '@/components/ui/PhoneInput'
 
 const schema = z.object({
   firstName: z.string().min(2),
@@ -17,6 +18,13 @@ const schema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   phone: z.string().optional(),
+  acceptedTerms: z.boolean().refine((v) => v, {
+    message: 'Debes aceptar los términos y condiciones',
+  }),
+  acceptedPrivacy: z.boolean().refine((v) => v, {
+    message: 'Debes aceptar la política de privacidad',
+  }),
+  marketingConsent: z.boolean().optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -26,14 +34,23 @@ export default function RegisterPage() {
   const { t } = useLanguage()
   const router = useRouter()
   const [showPass, setShowPass] = useState(false)
+  const legalVersion = process.env.NEXT_PUBLIC_LEGAL_VERSION ?? 'v1.0'
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      acceptedTerms: false,
+      acceptedPrivacy: false,
+      marketingConsent: false,
+    },
   })
 
   const onSubmit = async (data: FormData) => {
     try {
-      await registerUser(data)
+      await registerUser({
+        ...data,
+        legalVersion,
+      })
       toast.success(t('auth.register.success'))
       router.push('/dashboard')
     } catch (err: any) {
@@ -86,15 +103,17 @@ export default function RegisterPage() {
               {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t('auth.register.phone')}</label>
-              <input
-                {...register('phone')}
-                type="tel"
-                placeholder="+54 9 11 1234-5678"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100 transition-all"
-              />
-            </div>
+            <Controller
+              control={control}
+              name="phone"
+              render={({ field }) => (
+                <PhoneInput
+                  label={t('auth.register.phone')}
+                  value={field.value ?? ''}
+                  onChange={field.onChange}
+                />
+              )}
+            />
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">{t('auth.register.password')}</label>
@@ -114,6 +133,55 @@ export default function RegisterPage() {
                 </button>
               </div>
               {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
+            </div>
+
+            <div className="space-y-3 rounded-xl border border-gray-200 bg-gray-50 p-4">
+              <label className="flex items-start gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  {...register('acceptedTerms')}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                />
+                <span>
+                  Acepto los{' '}
+                  <Link href="/legal/terms" target="_blank" className="font-medium text-green-700 hover:underline">
+                    Términos y Condiciones
+                  </Link>
+                  .
+                </span>
+              </label>
+              {errors.acceptedTerms && (
+                <p className="text-red-500 text-xs -mt-1">{errors.acceptedTerms.message}</p>
+              )}
+
+              <label className="flex items-start gap-2 text-sm text-gray-700">
+                <input
+                  type="checkbox"
+                  {...register('acceptedPrivacy')}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                />
+                <span>
+                  Acepto la{' '}
+                  <Link href="/legal/privacy" target="_blank" className="font-medium text-green-700 hover:underline">
+                    Política de Privacidad y Tratamiento de Datos
+                  </Link>
+                  .
+                </span>
+              </label>
+              {errors.acceptedPrivacy && (
+                <p className="text-red-500 text-xs -mt-1">{errors.acceptedPrivacy.message}</p>
+              )}
+
+              <label className="flex items-start gap-2 text-sm text-gray-600">
+                <input
+                  type="checkbox"
+                  {...register('marketingConsent')}
+                  className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                />
+                <span>
+                  (Opcional) Acepto recibir novedades y comunicaciones informativas de INTI.
+                </span>
+              </label>
             </div>
 
             <button

@@ -30,9 +30,9 @@ export default function LoginPage() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      await login(data.email, data.password)
+      const loggedUser = await login(data.email, data.password)
       toast.success(t('auth.login.welcome'))
-      router.push('/dashboard')
+      router.push(loggedUser?.role === 'admin' ? '/admin' : '/dashboard')
     } catch (err: any) {
       toast.error(err.message || t('auth.login.error'))
     }

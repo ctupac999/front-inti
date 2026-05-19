@@ -9,7 +9,7 @@ import { API_ROUTES } from '@/utils/api-config'
 import type { User } from '@/types/user'
 import type { Product } from '@/types/product'
 import type { Trade } from '@/types/trade'
-import { Users, Package, Handshake, TrendingUp, ShieldCheck } from 'lucide-react'
+import { Users, Package, Handshake, TrendingUp, ShieldCheck, Mail } from 'lucide-react'
 
 interface DashboardStats {
   users: { total: number; active: number }
@@ -76,12 +76,13 @@ export default function AdminPage() {
       )}
 
       {/* Quick nav */}
-      <div className="grid md:grid-cols-4 gap-4">
+      <div className="grid md:grid-cols-5 gap-4">
         {[
           { href: '/admin/users', label: t('admin.nav.users'), icon: <Users className="h-5 w-5" />, desc: t('admin.nav.usersSub') },
           { href: '/admin/products', label: t('admin.nav.products'), icon: <Package className="h-5 w-5" />, desc: t('admin.nav.productsSub') },
           { href: '/admin/trades', label: t('admin.nav.trades'), icon: <Handshake className="h-5 w-5" />, desc: t('admin.nav.tradesSub') },
           { href: '/admin/config', label: t('admin.nav.config'), icon: <ShieldCheck className="h-5 w-5" />, desc: t('admin.nav.configSub') },
+          { href: '/admin/email-templates', label: 'Email Templates', icon: <Mail className="h-5 w-5" />, desc: 'Plantillas de correo multiidioma' },
         ].map((item) => (
           <a key={item.href} href={item.href} className="rounded-2xl border bg-white p-5 hover:shadow-sm hover:border-green-200 transition-all block">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-green-100 text-green-700 mb-3">

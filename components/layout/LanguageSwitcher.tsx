@@ -21,7 +21,7 @@ export default function LanguageSwitcher() {
   const current = languageInfo[language]
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative" ref={ref} suppressHydrationWarning>
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors"
@@ -37,6 +37,7 @@ export default function LanguageSwitcher() {
         <div
           className="absolute right-0 top-full mt-1.5 w-40 rounded-xl border border-gray-100 bg-white shadow-lg py-1 z-50"
           role="listbox"
+          suppressHydrationWarning
         >
           {availableLanguages.map((lang) => {
             const info = languageInfo[lang]

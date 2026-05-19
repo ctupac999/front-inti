@@ -9,6 +9,10 @@ export interface User {
   avatar?: string
   bio?: string
   isActive: boolean
+  legalVersion?: string
+  acceptedTermsAt?: string
+  acceptedPrivacyAt?: string
+  marketingConsent?: boolean
   createdAt: string
 }
 

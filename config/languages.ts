@@ -1,14 +1,15 @@
-export type Language = 'es' | 'en' | 'pt' | 'qu'
+export type Language = 'es' | 'es-ar' | 'en' | 'pt' | 'qu'
 
-export const availableLanguages: Language[] = ['es', 'en', 'pt', 'qu']
+export const availableLanguages: Language[] = ['es', 'es-ar', 'en', 'pt', 'qu']
 
 export const defaultLanguage: Language = 'es'
 
 export const languageInfo: Record<Language, { name: string; nativeName: string; flag: string }> = {
-  es: { name: 'Spanish',    nativeName: 'Español',    flag: '🇪🇸' },
-  en: { name: 'English',    nativeName: 'English',    flag: '🇺🇸' },
-  pt: { name: 'Portuguese', nativeName: 'Português',  flag: '🇧🇷' },
-  qu: { name: 'Quechua',    nativeName: 'Runasimi',   flag: '🌄' },
+  es:    { name: 'Spanish (Spain)',     nativeName: 'Español',    flag: '🇪🇸' },
+  'es-ar': { name: 'Spanish (Argentina)', nativeName: 'Español (AR)', flag: '🇦🇷' },
+  en:    { name: 'English',             nativeName: 'English',    flag: '🇺🇸' },
+  pt:    { name: 'Portuguese',          nativeName: 'Português',  flag: '🇧🇷' },
+  qu:    { name: 'Quechua',             nativeName: 'Runasimi',   flag: '🌄' },
 }
 
 export const isLanguageAvailable = (lang: string): lang is Language =>

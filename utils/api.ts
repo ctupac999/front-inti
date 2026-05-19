@@ -77,3 +77,13 @@ export async function del<T>(endpoint: string): Promise<T> {
   })
   return handleResponse<T>(res)
 }
+
+export async function put<T>(endpoint: string, body: unknown): Promise<T> {
+  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+    method: 'PUT',
+    headers: buildHeaders(),
+    body: JSON.stringify(body),
+    credentials: 'include',
+  })
+  return handleResponse<T>(res)
+}

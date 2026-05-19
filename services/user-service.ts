@@ -6,6 +6,14 @@ export async function updateProfile(data: Partial<User>): Promise<User> {
   return patch<User>(API_ROUTES.updateMe, data)
 }
 
+export async function updateLegalConsent(data: {
+  acceptedTerms: boolean
+  acceptedPrivacy: boolean
+  marketingConsent?: boolean
+}): Promise<User> {
+  return patch<User>(API_ROUTES.meLegalConsent, data)
+}
+
 export async function uploadAvatar(file: File): Promise<User> {
   const form = new FormData()
   form.append('file', file)

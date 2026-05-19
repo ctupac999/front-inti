@@ -8,6 +8,7 @@ export const API_ROUTES = {
   // Users
   me: '/users/me',
   updateMe: '/users/me',
+  meLegalConsent: '/users/me/legal-consent',
   meAvatar: '/users/me/avatar',
   meLocations: '/users/me/locations',
 
@@ -27,4 +28,10 @@ export const API_ROUTES = {
 
   // Site Config
   siteConfig: '/site-config',
+
+  // Email Templates
+  emailTemplates: '/email-templates',
+
+  // Legal
+  legalVersion: '/legal/version',
 }

@@ -28,8 +28,14 @@ export default function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
+    <header
+      className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60"
+      suppressHydrationWarning
+    >
+      <div
+        className="container mx-auto flex h-16 items-center justify-between px-4"
+        suppressHydrationWarning
+      >
         <Link href="/" className="flex items-center gap-2">
           {config?.logo?.url ? (
             <img src={config.logo.url} alt={config.siteName} className="h-9 w-auto object-contain" />
@@ -50,7 +56,7 @@ export default function Navbar() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" suppressHydrationWarning>
           <LanguageSwitcher />
 
           {isAuthenticated && user ? (

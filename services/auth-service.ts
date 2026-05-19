@@ -17,6 +17,10 @@ export async function register(data: {
   email: string
   password: string
   phone?: string
+  acceptedTerms: boolean
+  acceptedPrivacy: boolean
+  legalVersion?: string
+  marketingConsent?: boolean
 }): Promise<AuthResponse> {
   const res = await post<AuthResponse>(API_ROUTES.register, data)
   if (res.token) {
