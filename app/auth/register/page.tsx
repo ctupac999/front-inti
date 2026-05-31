@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -11,6 +11,12 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { Sprout, Eye, EyeOff } from 'lucide-react'
 import PhoneInput from '@/components/ui/PhoneInput'
+import { getLegalVersion } from '@/services/legal-service'
+
+const getErrorMessage = (err: unknown, fallback: string) => {
+  if (err instanceof Error && err.message) return err.message
+  return fallback
+}
 
 const schema = z.object({
   firstName: z.string().min(2),
@@ -19,10 +25,10 @@ const schema = z.object({
   password: z.string().min(6),
   phone: z.string().optional(),
   acceptedTerms: z.boolean().refine((v) => v, {
-    message: 'Debes aceptar los términos y condiciones',
+    message: 'auth.register.terms.required',
   }),
   acceptedPrivacy: z.boolean().refine((v) => v, {
-    message: 'Debes aceptar la política de privacidad',
+    message: 'auth.register.privacy.required',
   }),
   marketingConsent: z.boolean().optional(),
 })
@@ -34,7 +40,13 @@ export default function RegisterPage() {
   const { t } = useLanguage()
   const router = useRouter()
   const [showPass, setShowPass] = useState(false)
-  const legalVersion = process.env.NEXT_PUBLIC_LEGAL_VERSION ?? 'v1.0'
+  const [legalVersion, setLegalVersion] = useState(process.env.NEXT_PUBLIC_LEGAL_VERSION ?? 'v1.0')
+
+  useEffect(() => {
+    getLegalVersion()
+      .then((res) => setLegalVersion(res.legalVersion || 'v1.0'))
+      .catch(() => null)
+  }, [])
 
   const { register, handleSubmit, control, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -53,8 +65,8 @@ export default function RegisterPage() {
       })
       toast.success(t('auth.register.success'))
       router.push('/dashboard')
-    } catch (err: any) {
-      toast.error(err.message || t('auth.register.error'))
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, t('auth.register.error')))
     }
   }
 
@@ -121,7 +133,7 @@ export default function RegisterPage() {
                 <input
                   {...register('password')}
                   type={showPass ? 'text' : 'password'}
-                  placeholder="Minimo 6 caracteres"
+                  placeholder={t('auth.register.passwordPlaceholder')}
                   className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100 transition-all pr-10"
                 />
                 <button
@@ -143,15 +155,15 @@ export default function RegisterPage() {
                   className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
                 />
                 <span>
-                  Acepto los{' '}
+                  {t('auth.register.terms.accept')}{' '}
                   <Link href="/legal/terms" target="_blank" className="font-medium text-green-700 hover:underline">
-                    Términos y Condiciones
+                    {t('auth.register.terms.link')}
                   </Link>
                   .
                 </span>
               </label>
               {errors.acceptedTerms && (
-                <p className="text-red-500 text-xs -mt-1">{errors.acceptedTerms.message}</p>
+                <p className="text-red-500 text-xs -mt-1">{t('auth.register.terms.required')}</p>
               )}
 
               <label className="flex items-start gap-2 text-sm text-gray-700">
@@ -161,15 +173,15 @@ export default function RegisterPage() {
                   className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
                 />
                 <span>
-                  Acepto la{' '}
+                  {t('auth.register.privacy.accept')}{' '}
                   <Link href="/legal/privacy" target="_blank" className="font-medium text-green-700 hover:underline">
-                    Política de Privacidad y Tratamiento de Datos
+                    {t('auth.register.privacy.link')}
                   </Link>
                   .
                 </span>
               </label>
               {errors.acceptedPrivacy && (
-                <p className="text-red-500 text-xs -mt-1">{errors.acceptedPrivacy.message}</p>
+                <p className="text-red-500 text-xs -mt-1">{t('auth.register.privacy.required')}</p>
               )}
 
               <label className="flex items-start gap-2 text-sm text-gray-600">
@@ -178,9 +190,7 @@ export default function RegisterPage() {
                   {...register('marketingConsent')}
                   className="mt-1 h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
                 />
-                <span>
-                  (Opcional) Acepto recibir novedades y comunicaciones informativas de INTI.
-                </span>
+                <span>{t('auth.register.marketing.label')}</span>
               </label>
             </div>
 

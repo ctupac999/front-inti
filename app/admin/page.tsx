@@ -4,12 +4,11 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/auth-context'
 import { useLanguage } from '@/contexts/language-context'
 import { useRouter } from 'next/navigation'
-import { get, patch } from '@/utils/api'
+import { get } from '@/utils/api'
 import { API_ROUTES } from '@/utils/api-config'
 import type { User } from '@/types/user'
 import type { Product } from '@/types/product'
-import type { Trade } from '@/types/trade'
-import { Users, Package, Handshake, TrendingUp, ShieldCheck, Mail } from 'lucide-react'
+import { Users, Package, Handshake, TrendingUp, ShieldCheck, Mail, Scale } from 'lucide-react'
 
 interface DashboardStats {
   users: { total: number; active: number }
@@ -60,9 +59,9 @@ export default function AdminPage() {
       ) : stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { label: t('admin.stats.users'), value: stats.users.total, sub: `${stats.users.active} ${t('admin.stats.usersActive').replace('{count}', '')}`, icon: <Users className="h-5 w-5 text-blue-600" />, color: 'bg-blue-50' },
-            { label: t('admin.stats.products'), value: stats.products.total, sub: `${stats.products.available} ${t('admin.stats.productsAvailable').replace('{count}', '')}`, icon: <Package className="h-5 w-5 text-green-600" />, color: 'bg-green-50' },
-            { label: t('admin.stats.trades'), value: stats.trades.total, sub: `${stats.trades.completed} ${t('admin.stats.tradesCompleted').replace('{count}', '')}`, icon: <Handshake className="h-5 w-5 text-amber-600" />, color: 'bg-amber-50' },
+            { label: t('admin.stats.users'), value: stats.users.total, sub: t('admin.stats.usersActive', { count: stats.users.active }), icon: <Users className="h-5 w-5 text-blue-600" />, color: 'bg-blue-50' },
+            { label: t('admin.stats.products'), value: stats.products.total, sub: t('admin.stats.productsAvailable', { count: stats.products.available }), icon: <Package className="h-5 w-5 text-green-600" />, color: 'bg-green-50' },
+            { label: t('admin.stats.trades'), value: stats.trades.total, sub: t('admin.stats.tradesCompleted', { count: stats.trades.completed }), icon: <Handshake className="h-5 w-5 text-amber-600" />, color: 'bg-amber-50' },
             { label: t('admin.stats.successRate'), value: stats.trades.total > 0 ? `${Math.round((stats.trades.completed / stats.trades.total) * 100)}%` : '0%', sub: t('admin.stats.successRateSub'), icon: <TrendingUp className="h-5 w-5 text-purple-600" />, color: 'bg-purple-50' },
           ].map((s, i) => (
             <div key={i} className={`${s.color} rounded-2xl p-5`}>
@@ -76,13 +75,14 @@ export default function AdminPage() {
       )}
 
       {/* Quick nav */}
-      <div className="grid md:grid-cols-5 gap-4">
+      <div className="grid md:grid-cols-6 gap-4">
         {[
           { href: '/admin/users', label: t('admin.nav.users'), icon: <Users className="h-5 w-5" />, desc: t('admin.nav.usersSub') },
           { href: '/admin/products', label: t('admin.nav.products'), icon: <Package className="h-5 w-5" />, desc: t('admin.nav.productsSub') },
           { href: '/admin/trades', label: t('admin.nav.trades'), icon: <Handshake className="h-5 w-5" />, desc: t('admin.nav.tradesSub') },
           { href: '/admin/config', label: t('admin.nav.config'), icon: <ShieldCheck className="h-5 w-5" />, desc: t('admin.nav.configSub') },
           { href: '/admin/email-templates', label: 'Email Templates', icon: <Mail className="h-5 w-5" />, desc: 'Plantillas de correo multiidioma' },
+          { href: '/admin/legal', label: 'Legal Management', icon: <Scale className="h-5 w-5" />, desc: 'Versionado legal y consentimiento' },
         ].map((item) => (
           <a key={item.href} href={item.href} className="rounded-2xl border bg-white p-5 hover:shadow-sm hover:border-green-200 transition-all block">
             <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-green-100 text-green-700 mb-3">

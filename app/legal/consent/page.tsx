@@ -37,8 +37,8 @@ export default function LegalConsentPage() {
       await refreshUser()
       toast.success('Consentimiento actualizado correctamente')
       router.push('/dashboard')
-    } catch (err: any) {
-      toast.error(err.message || 'No se pudo actualizar el consentimiento')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'No se pudo actualizar el consentimiento')
     } finally {
       setSaving(false)
     }

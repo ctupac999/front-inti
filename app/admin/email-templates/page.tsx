@@ -5,14 +5,13 @@ import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import {
-  Mail, Plus, Save, Trash2, Eye, EyeOff, ChevronLeft,
+  Mail, Save, Trash2, Eye, EyeOff, ChevronLeft,
   Code2, RefreshCw, Loader2,
 } from 'lucide-react'
 import {
   getAllEmailTemplates,
   upsertEmailTemplate,
   deleteEmailTemplate,
-  previewEmailTemplate,
   type EmailTemplate,
 } from '@/services/email-templates-service'
 
@@ -878,30 +877,33 @@ export default function AdminEmailTemplatesPage() {
   }, [])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (isAdmin) fetchTemplates()
   }, [isAdmin, fetchTemplates])
 
-  // When key or locale changes, load existing template (or defaults)
-  useEffect(() => {
-    if (!selectedKey) return
-    const existing = templates.find(
-      (t) => t.key === selectedKey.key && t.locale === selectedLocale,
+  const hasTemplate = (key: string, locale: string) =>
+    templates.some((t) => t.key === key && t.locale === locale)
+
+  const syncEditorContent = (
+    key: TemplateKey,
+    locale: string,
+    sourceTemplates = templates,
+  ) => {
+    const existing = sourceTemplates.find(
+      (t) => t.key === key.key && t.locale === locale,
     )
     if (existing) {
       setSubject(existing.subject)
       setHtml(existing.html)
     } else {
-      const def = DEFAULT_TEMPLATES[selectedKey.key]?.[selectedLocale]
+      const def = DEFAULT_TEMPLATES[key.key]?.[locale]
       setSubject(def?.subject ?? '')
       setHtml(def?.html ?? '')
     }
     setDirty(false)
     setPreviewHtml(null)
     setShowPreview(false)
-  }, [selectedKey, selectedLocale, templates])
-
-  const hasTemplate = (key: string, locale: string) =>
-    templates.some((t) => t.key === key && t.locale === locale)
+  }
 
   const handleSave = async () => {
     if (!selectedKey) return
@@ -919,8 +921,8 @@ export default function AdminEmailTemplatesPage() {
       })
       setDirty(false)
       toast.success('Template guardado')
-    } catch (e: any) {
-      toast.error(e.message || 'Error al guardar')
+    } catch (e: unknown) {
+      toast.error(e instanceof Error && e.message ? e.message : 'Error al guardar')
     } finally {
       setSaving(false)
     }
@@ -939,8 +941,8 @@ export default function AdminEmailTemplatesPage() {
       setHtml('')
       setDirty(false)
       toast.success('Template eliminado')
-    } catch (e: any) {
-      toast.error(e.message || 'Error al eliminar')
+    } catch (e: unknown) {
+      toast.error(e instanceof Error && e.message ? e.message : 'Error al eliminar')
     } finally {
       setDeleting(false)
     }
@@ -1023,13 +1025,13 @@ export default function AdminEmailTemplatesPage() {
                     <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{group}</p>
                   </div>
                   {TEMPLATE_KEYS.filter((k) => k.group === group).map((tk) => {
-                    const existingCount = LOCALES.filter((l) => hasTemplate(tk.key, l.code)).length
                     return (
                       <button
                         key={tk.key}
                         onClick={() => {
                           setSelectedKey(tk)
                           setSelectedLocale('es')
+                          syncEditorContent(tk, 'es')
                         }}
                         className={`w-full text-left px-4 py-3 border-b last:border-b-0 transition-colors ${
                           selectedKey?.key === tk.key
@@ -1113,7 +1115,12 @@ export default function AdminEmailTemplatesPage() {
                   {LOCALES.map((l) => (
                     <button
                       key={l.code}
-                      onClick={() => setSelectedLocale(l.code)}
+                      onClick={() => {
+                        setSelectedLocale(l.code)
+                        if (selectedKey) {
+                          syncEditorContent(selectedKey, l.code)
+                        }
+                      }}
                       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                         selectedLocale === l.code
                           ? 'bg-green-100 text-green-800 ring-1 ring-green-300'

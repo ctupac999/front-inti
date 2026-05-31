@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Sprout, LayoutDashboard, LogOut, Settings, ShieldCheck } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import LanguageSwitcher from './LanguageSwitcher'
+import Image from 'next/image'
 
 export default function Navbar() {
   const { user, isAuthenticated, isAdmin, logout } = useAuth()
@@ -38,7 +39,7 @@ export default function Navbar() {
       >
         <Link href="/" className="flex items-center gap-2">
           {config?.logo?.url ? (
-            <img src={config.logo.url} alt={config.siteName} className="h-9 w-auto object-contain" />
+            <Image src={config.logo.url} alt={config.siteName} width={0} height={36} className="h-9 w-auto object-contain" />
           ) : (
             <Sprout className="h-7 w-7 text-green-600" />
           )}

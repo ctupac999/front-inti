@@ -37,7 +37,7 @@ export default function TradesPage() {
         .catch(() => toast.error(t('trades.loadError')))
         .finally(() => setFetching(false))
     }
-  }, [user])
+  }, [user, t])
 
   const received = trades.filter(t => {
     const receiver = typeof t.receiver === 'object' ? t.receiver : null
@@ -55,8 +55,8 @@ export default function TradesPage() {
       await respondTrade(tradeId, status)
       setTrades(prev => prev.map(t => t._id === tradeId ? { ...t, status } : t))
       toast.success(status === 'accepted' ? t('trades.accepted') : t('trades.rejected'))
-    } catch (err: any) {
-      toast.error(err.message || 'Error')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'Error')
     }
   }
 
@@ -65,8 +65,8 @@ export default function TradesPage() {
       await cancelTrade(tradeId)
       setTrades(prev => prev.map(t => t._id === tradeId ? { ...t, status: 'cancelled' } : t))
       toast.success(t('trades.cancelled'))
-    } catch (err: any) {
-      toast.error(err.message || 'Error')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'Error')
     }
   }
 
@@ -127,7 +127,7 @@ export default function TradesPage() {
                         <p className="text-xs text-gray-500 mt-1">{t('trades.from')}: {proposer.firstName} {proposer.lastName}</p>
                       )}
                       {trade.message && (
-                        <p className="text-xs text-gray-500 mt-2 italic">"{trade.message}"</p>
+                        <p className="text-xs text-gray-500 mt-2 italic">&quot;{trade.message}&quot;</p>
                       )}
                     </div>
 

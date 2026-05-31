@@ -8,7 +8,7 @@ export default function LegalIndexPage() {
         En esta sección encontrarás los documentos legales aplicables al uso de INTI.
       </p>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-4 sm:grid-cols-3">
         <Link
           href="/legal/terms"
           className="rounded-2xl border bg-white p-6 hover:border-green-300 hover:shadow-sm transition-all"
@@ -26,6 +26,16 @@ export default function LegalIndexPage() {
           <h2 className="font-semibold text-gray-900">Política de Privacidad</h2>
           <p className="text-sm text-gray-600 mt-2">
             Tratamiento de datos personales, finalidades, base legal y derechos del usuario.
+          </p>
+        </Link>
+
+        <Link
+          href="/legal/cookies"
+          className="rounded-2xl border bg-white p-6 hover:border-green-300 hover:shadow-sm transition-all"
+        >
+          <h2 className="font-semibold text-gray-900">Política de Cookies</h2>
+          <p className="text-sm text-gray-600 mt-2">
+            Información sobre cookies necesarias, analíticas y de marketing, y cómo configurarlas.
           </p>
         </Link>
       </div>

@@ -6,6 +6,8 @@ import { LanguageProvider } from '@/contexts/language-context'
 import { useSiteConfigStore } from '@/stores/site-config-store'
 import { getSiteConfig } from '@/services/site-config-service'
 import { Toaster } from '@/components/ui/sonner'
+import LegalConsentGuard from '@/components/legal/LegalConsentGuard'
+import CookieConsentBanner from '@/components/legal/CookieConsentBanner'
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
@@ -17,8 +19,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <LanguageProvider>
       <AuthProvider>
+        <LegalConsentGuard />
         {children}
         <Toaster richColors position="top-right" />
+        <CookieConsentBanner />
       </AuthProvider>
     </LanguageProvider>
   )

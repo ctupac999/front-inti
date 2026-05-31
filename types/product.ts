@@ -17,6 +17,7 @@ export type ProductStatus = 'available' | 'reserved' | 'traded' | 'inactive'
 export interface ProductImage {
   url: string
   publicId: string
+  objectPosition?: string
 }
 
 export interface Product {
@@ -35,8 +36,10 @@ export interface Product {
   }
   location: {
     name: string
+    country?: string
     province: string
     municipality: string
+    postalCode?: string
   }
   status: ProductStatus
   lookingFor: string[]

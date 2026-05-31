@@ -21,14 +21,14 @@ export default function LocationsPage() {
   const { user, loading, refreshUser } = useAuth()
   const { t } = useLanguage()
   const router = useRouter()
-  const [locations, setLocations] = useState<Location[]>([])
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState({ name: '', province: '', municipality: '' })
   const [saving, setSaving] = useState(false)
 
+  const locations = (user?.locations || []) as Location[]
+
   useEffect(() => {
     if (!loading && !user) router.push('/auth/login')
-    if (user) setLocations(user.locations || [])
   }, [user, loading, router])
 
   const handleAdd = async (e: React.FormEvent) => {
@@ -40,8 +40,8 @@ export default function LocationsPage() {
       setForm({ name: '', province: '', municipality: '' })
       setShowForm(false)
       toast.success(t('locations.added'))
-    } catch (err: any) {
-      toast.error(err.message || 'Error al agregar')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'Error al agregar')
     } finally {
       setSaving(false)
     }
@@ -52,8 +52,8 @@ export default function LocationsPage() {
       await removeLocation(index)
       await refreshUser()
       toast.success(t('locations.removed'))
-    } catch (err: any) {
-      toast.error(err.message || 'Error al eliminar')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'Error al eliminar')
     }
   }
 

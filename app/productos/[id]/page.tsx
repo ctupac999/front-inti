@@ -31,7 +31,7 @@ export default function ProductDetailPage() {
       .then(setProduct)
       .catch(() => toast.error(t('product.notFound')))
       .finally(() => setLoading(false))
-  }, [id])
+  }, [id, t])
 
   const openTradeModal = async () => {
     if (!user) { router.push('/auth/login'); return }
@@ -51,8 +51,8 @@ export default function ProductDetailPage() {
       })
       toast.success(t('product.trade.success'))
       setShowTradeModal(false)
-    } catch (err: any) {
-      toast.error(err.message || 'Error al enviar propuesta')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'Error al enviar propuesta')
     } finally {
       setSubmitting(false)
     }
@@ -85,7 +85,13 @@ export default function ProductDetailPage() {
           {/* Images */}
           <div className="relative aspect-video bg-gray-100">
             {product.images && product.images.length > 0 ? (
-              <Image src={product.images[0].url} alt={product.title} fill className="object-cover" />
+              <Image
+                src={product.images[0].url}
+                alt={product.title}
+                fill
+                className="object-cover"
+                style={{ objectPosition: product.images[0].objectPosition || 'center center' }}
+              />
             ) : (
               <div className="flex items-center justify-center h-full text-gray-400 text-6xl">🌾</div>
             )}
@@ -101,7 +107,13 @@ export default function ProductDetailPage() {
             <div className="flex gap-2 p-4 overflow-x-auto">
               {product.images.map((img, i) => (
                 <div key={i} className="relative h-16 w-16 flex-shrink-0 rounded-lg overflow-hidden">
-                  <Image src={img.url} alt="" fill className="object-cover" />
+                  <Image
+                    src={img.url}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    style={{ objectPosition: img.objectPosition || 'center center' }}
+                  />
                 </div>
               ))}
             </div>

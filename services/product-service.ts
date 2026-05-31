@@ -1,4 +1,4 @@
-import { get, postForm, patchForm, del, patch } from '@/utils/api'
+import { get, postForm, patchForm, del } from '@/utils/api'
 import { API_ROUTES } from '@/utils/api-config'
 import type { Product } from '@/types/product'
 

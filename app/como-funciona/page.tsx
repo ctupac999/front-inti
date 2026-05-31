@@ -8,12 +8,12 @@ export default function ComoFuncionaPage() {
   const { t } = useLanguage()
 
   const steps = [
-    { icon: <Sprout className="size-8 text-green-600" />, number: t('howItWorks.step1.number'), title: t('howItWorks.step1.title'), description: t('howItWorks.step1.desc') },
-    { icon: <Camera className="size-8 text-green-600" />, number: t('howItWorks.step2.number'), title: t('howItWorks.step2.title'), description: t('howItWorks.step2.desc') },
-    { icon: <MapPin className="size-8 text-green-600" />, number: t('howItWorks.step3.number'), title: t('howItWorks.step3.title'), description: t('howItWorks.step3.desc') },
-    { icon: <MessageCircle className="size-8 text-green-600" />, number: t('howItWorks.step4.number'), title: t('howItWorks.step4.title'), description: t('howItWorks.step4.desc') },
-    { icon: <Handshake className="size-8 text-green-600" />, number: t('howItWorks.step5.number'), title: t('howItWorks.step5.title'), description: t('howItWorks.step5.desc') },
-    { icon: <CheckCircle className="size-8 text-green-600" />, number: t('howItWorks.step6.number'), title: t('howItWorks.step6.title'), description: t('howItWorks.step6.desc') },
+    { icon: <Sprout aria-hidden="true" className="size-8 text-green-600" />, number: t('howItWorks.step1.number'), title: t('howItWorks.step1.title'), description: t('howItWorks.step1.desc') },
+    { icon: <Camera aria-hidden="true" className="size-8 text-green-600" />, number: t('howItWorks.step2.number'), title: t('howItWorks.step2.title'), description: t('howItWorks.step2.desc') },
+    { icon: <MapPin aria-hidden="true" className="size-8 text-green-600" />, number: t('howItWorks.step3.number'), title: t('howItWorks.step3.title'), description: t('howItWorks.step3.desc') },
+    { icon: <MessageCircle aria-hidden="true" className="size-8 text-green-600" />, number: t('howItWorks.step4.number'), title: t('howItWorks.step4.title'), description: t('howItWorks.step4.desc') },
+    { icon: <Handshake aria-hidden="true" className="size-8 text-green-600" />, number: t('howItWorks.step5.number'), title: t('howItWorks.step5.title'), description: t('howItWorks.step5.desc') },
+    { icon: <CheckCircle aria-hidden="true" className="size-8 text-green-600" />, number: t('howItWorks.step6.number'), title: t('howItWorks.step6.title'), description: t('howItWorks.step6.desc') },
   ]
 
   const faqs = [
@@ -25,12 +25,12 @@ export default function ComoFuncionaPage() {
   ]
 
   return (
-    <div className="flex flex-col">
+    <main className="flex flex-col">
       {/* Hero */}
       <section className="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 py-20 px-4">
         <div className="container mx-auto max-w-3xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-1.5 text-sm font-medium text-green-700 mb-6">
-            <Leaf className="size-4" />
+            <Leaf aria-hidden="true" className="size-4" />
             {t('howItWorks.badge')}
           </div>
           <h1 className="text-4xl md:text-5xl font-semibold text-zinc-900 mb-5 leading-tight">
@@ -73,10 +73,13 @@ export default function ComoFuncionaPage() {
           <h2 className="text-3xl font-semibold text-center text-zinc-900 mb-12">{t('howItWorks.faq.title')}</h2>
           <div className="space-y-4">
             {faqs.map((faq, i) => (
-              <div key={i} className="bg-white rounded-2xl border border-gray-100 p-6">
-                <h3 className="font-semibold text-zinc-900 mb-2">{faq.q}</h3>
-                <p className="text-sm text-zinc-600 leading-relaxed">{faq.a}</p>
-              </div>
+              <details key={i} className="bg-white rounded-2xl border border-gray-100 [&[open]]:shadow-sm transition-shadow">
+                <summary className="flex cursor-pointer list-none items-center justify-between p-6 font-semibold text-zinc-900 [&::-webkit-details-marker]:hidden">
+                  {faq.q}
+                  <span className="text-green-500 text-xl transition-transform [details[open]_&]:rotate-180">▾</span>
+                </summary>
+                <p className="px-6 pb-6 text-sm text-zinc-600 leading-relaxed">{faq.a}</p>
+              </details>
             ))}
           </div>
         </div>
@@ -92,7 +95,7 @@ export default function ComoFuncionaPage() {
               href="/auth/register"
               className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-green-700 hover:bg-green-50 transition-colors"
             >
-              {t('howItWorks.cta.register')} <ArrowRight className="size-5" />
+              {t('howItWorks.cta.register')} <ArrowRight aria-hidden="true" className="size-5" />
             </Link>
             <Link
               href="/productos"
@@ -103,6 +106,6 @@ export default function ComoFuncionaPage() {
           </div>
         </div>
       </section>
-    </div>
+    </main>
   )
 }

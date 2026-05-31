@@ -4,7 +4,6 @@ import {
   createContext,
   useContext,
   useState,
-  useEffect,
   useMemo,
   type ReactNode,
 } from 'react'
@@ -14,7 +13,6 @@ import {
   type Language,
   availableLanguages,
   defaultLanguage,
-  detectBrowserLanguage,
   getInitialLanguage,
   saveLanguage,
 } from '@/config/languages'
@@ -50,15 +48,7 @@ function toNestedMessages(flat: Record<string, string>): Record<string, unknown>
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLang] = useState<Language>(defaultLanguage)
-  const [mounted, setMounted] = useState(false)
-
-  // Detect initial language on mount (client only)
-  useEffect(() => {
-    const initial = getInitialLanguage()
-    setLang(initial)
-    setMounted(true)
-  }, [])
+  const [language, setLang] = useState<Language>(getInitialLanguage)
 
   const changeLanguage = (lang: Language) => {
     setLang(lang)

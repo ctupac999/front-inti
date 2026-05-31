@@ -36,10 +36,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem('token')
     if (token) {
       try {
-        const decoded: any = jwtDecode(token)
+        const decoded = jwtDecode<{ exp?: number }>(token)
         // Verificar expiración
-        if (decoded.exp * 1000 < Date.now()) {
+        if (!decoded.exp || decoded.exp * 1000 < Date.now()) {
           logoutService()
+          // eslint-disable-next-line react-hooks/set-state-in-effect
           setLoading(false)
           return
         }

@@ -1,8 +1,14 @@
+'use client'
+
+import { useLanguage } from '@/contexts/language-context'
+
 export default function TermsPage() {
+  const { t } = useLanguage()
+  const legalVersion = t('legal.version')
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-10">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">Términos y Condiciones de Uso</h1>
-      <p className="text-sm text-gray-500 mb-8">Versión v1.0 — Última actualización: 19/05/2026</p>
+    <main className="container mx-auto max-w-4xl px-4 py-10">
+      <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('legal.terms.title')}</h1>
+      <p className="text-sm text-gray-500 mb-8">{legalVersion} — {t('legal.lastUpdate')}: 19/05/2026</p>
 
       <div className="space-y-6 text-gray-700 leading-7">
         <section>
@@ -94,6 +100,6 @@ export default function TermsPage() {
           </p>
         </section>
       </div>
-    </div>
+    </main>
   )
 }

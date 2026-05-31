@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -9,9 +9,20 @@ import { useAuth } from '@/contexts/auth-context'
 import { getProduct, updateProduct, removeProductImage } from '@/services/product-service'
 import { CATEGORY_LABELS, UNIT_OPTIONS, type Product } from '@/types/product'
 import { toast } from 'sonner'
-import { ArrowLeft, Upload, X, Leaf, Trash2 } from 'lucide-react'
+import { ArrowLeft, Upload, Leaf, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import ProductImageUpload, { type ImageEntry } from '@/components/products/ProductImageUpload'
+import { getSiteConfig } from '@/services/site-config-service'
+import {
+  DEFAULT_COUNTRY_CODE,
+  FALLBACK_ENABLED_COUNTRY_CODES,
+  getCountryConfig,
+  getCountryOptions,
+  getMunicipalityOptions,
+  getRegionOptions,
+  isCountryCodeEnabled,
+} from '@/config/location-catalog'
 
 const schema = z.object({
   title: z.string().min(3, 'Mínimo 3 caracteres'),
@@ -20,8 +31,10 @@ const schema = z.object({
   quantity: z.string().min(1, 'Ingresá la cantidad'),
   unit: z.string().min(1, 'Seleccioná la unidad'),
   locationName: z.string().min(1, 'Nombre del lugar requerido'),
+  locationCountry: z.string().min(1, 'Pais requerido'),
   locationProvince: z.string().min(1, 'Provincia requerida'),
   locationMunicipality: z.string().min(1, 'Municipio requerido'),
+  locationPostalCode: z.string().optional(),
   lookingFor: z.string().optional(),
   isOrganic: z.boolean().optional(),
   harvestDate: z.string().optional(),
@@ -36,17 +49,57 @@ export default function EditProductPage() {
   const router = useRouter()
   const [product, setProduct] = useState<Product | null>(null)
   const [fetching, setFetching] = useState(true)
-  const [newImages, setNewImages] = useState<File[]>([])
-  const [newPreviews, setNewPreviews] = useState<string[]>([])
+  const [newImageEntries, setNewImageEntries] = useState<ImageEntry[]>([])
   const [removingImage, setRemovingImage] = useState<string | null>(null)
+  const [enabledCountryCodes, setEnabledCountryCodes] = useState<string[]>(
+    FALLBACK_ENABLED_COUNTRY_CODES,
+  )
+  const previousCountryRef = useRef<string | null>(null)
 
-  const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, reset, watch, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const selectedCountry = watch('locationCountry') || DEFAULT_COUNTRY_CODE
+  const selectedProvince = watch('locationProvince') || ''
+  const selectedMunicipality = watch('locationMunicipality') || ''
+  const countryOptions = getCountryOptions(enabledCountryCodes)
+  const defaultCountryCode = countryOptions.some(
+    (country) => country.code === DEFAULT_COUNTRY_CODE,
+  )
+    ? DEFAULT_COUNTRY_CODE
+    : (countryOptions[0]?.code ?? DEFAULT_COUNTRY_CODE)
+  const resolvedSelectedCountry = countryOptions.some(
+    (country) => country.code === selectedCountry,
+  )
+    ? selectedCountry
+    : defaultCountryCode
+  const countryConfig = getCountryConfig(resolvedSelectedCountry, enabledCountryCodes)
+  const regionOptions = getRegionOptions(resolvedSelectedCountry)
+  const municipalityOptions = getMunicipalityOptions(resolvedSelectedCountry, selectedProvince)
 
   useEffect(() => {
     if (!loading && !user) router.push('/auth/login')
   }, [user, loading, router])
+
+  useEffect(() => {
+    let isMounted = true
+
+    getSiteConfig()
+      .then((config) => {
+        if (!isMounted) return
+        const fromAdmin = (config.enabledCountries ?? [])
+          .map((code) => code.trim().toUpperCase())
+          .filter(Boolean)
+        if (fromAdmin.length > 0) setEnabledCountryCodes(fromAdmin)
+      })
+      .catch(() => null)
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   useEffect(() => {
     getProduct(id)
@@ -59,8 +112,10 @@ export default function EditProductPage() {
           quantity: String(p.quantity),
           unit: p.unit,
           locationName: p.location.name,
+          locationCountry: p.location.country || DEFAULT_COUNTRY_CODE,
           locationProvince: p.location.province,
           locationMunicipality: p.location.municipality,
+          locationPostalCode: p.location.postalCode || '',
           lookingFor: p.lookingFor?.join(', ') || '',
           isOrganic: p.isOrganic,
           harvestDate: p.harvestDate ? p.harvestDate.split('T')[0] : '',
@@ -82,16 +137,34 @@ export default function EditProductPage() {
     }
   }, [fetching, product, user, router])
 
-  const handleNewImages = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []).slice(0, 5 - (product?.images.length || 0))
-    setNewImages(files)
-    setNewPreviews(files.map((f) => URL.createObjectURL(f)))
-  }
+  useEffect(() => {
+    if (!isCountryCodeEnabled(selectedCountry, enabledCountryCodes)) {
+      setValue('locationCountry', defaultCountryCode)
+    }
+  }, [selectedCountry, enabledCountryCodes, defaultCountryCode, setValue])
 
-  const removeNewImage = (i: number) => {
-    setNewImages((prev) => prev.filter((_, idx) => idx !== i))
-    setNewPreviews((prev) => prev.filter((_, idx) => idx !== i))
-  }
+  useEffect(() => {
+    if (previousCountryRef.current === null) {
+      previousCountryRef.current = resolvedSelectedCountry
+      return
+    }
+
+    if (previousCountryRef.current !== resolvedSelectedCountry) {
+      setValue('locationProvince', '')
+      setValue('locationMunicipality', '')
+      previousCountryRef.current = resolvedSelectedCountry
+    }
+  }, [resolvedSelectedCountry, setValue])
+
+  useEffect(() => {
+    const validMunicipalities = getMunicipalityOptions(
+      resolvedSelectedCountry,
+      selectedProvince,
+    )
+    if (selectedMunicipality && !validMunicipalities.includes(selectedMunicipality)) {
+      setValue('locationMunicipality', '')
+    }
+  }, [resolvedSelectedCountry, selectedProvince, selectedMunicipality, setValue])
 
   const handleRemoveExistingImage = async (publicId: string) => {
     if (!product) return
@@ -100,8 +173,8 @@ export default function EditProductPage() {
       const updated = await removeProductImage(product._id, publicId)
       setProduct(updated)
       toast.success('Imagen eliminada')
-    } catch (err: any) {
-      toast.error(err.message || 'Error al eliminar imagen')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'Error al eliminar imagen')
     } finally {
       setRemovingImage(null)
     }
@@ -117,19 +190,22 @@ export default function EditProductPage() {
       form.append('quantity', String(data.quantity))
       form.append('unit', data.unit)
       form.append('location[name]', data.locationName)
+      form.append('location[country]', resolvedSelectedCountry)
       form.append('location[province]', data.locationProvince)
       form.append('location[municipality]', data.locationMunicipality)
+      if (data.locationPostalCode) form.append('location[postalCode]', data.locationPostalCode)
       if (data.lookingFor) form.append('lookingFor', data.lookingFor)
       if (data.isOrganic) form.append('isOrganic', 'true')
       if (data.harvestDate) form.append('harvestDate', data.harvestDate)
       if (data.status) form.append('status', data.status)
-      newImages.forEach((img) => form.append('images', img))
+      newImageEntries.forEach((entry) => form.append('images', entry.file))
+      form.append('imagePositions', JSON.stringify(newImageEntries.map((e) => e.objectPosition)))
 
       await updateProduct(product._id, form)
       toast.success('Producto actualizado!')
       router.push('/dashboard')
-    } catch (err: any) {
-      toast.error(err.message || 'Error al actualizar')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'Error al actualizar')
     }
   }
 
@@ -139,7 +215,7 @@ export default function EditProductPage() {
     </div>
   )
 
-  const totalImages = (product.images?.length || 0) + newPreviews.length
+  const maxNewImages = 5 - (product.images?.length || 0)
 
   return (
     <div className="container mx-auto max-w-2xl px-4 py-8">
@@ -153,7 +229,7 @@ export default function EditProductPage() {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Imágenes existentes */}
+        {/* Fotos */}
         <div className="bg-white rounded-2xl border p-6">
           <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Upload className="h-4 w-4" /> Fotos
@@ -161,8 +237,8 @@ export default function EditProductPage() {
 
           {/* Existing images */}
           {product.images && product.images.length > 0 && (
-            <div className="mb-3">
-              <p className="text-xs text-gray-500 mb-2">Imágenes actuales</p>
+            <div className="mb-4">
+              <p className="text-xs text-gray-500 mb-2 font-medium">Imágenes actuales</p>
               <div className="flex flex-wrap gap-3">
                 {product.images.map((img) => (
                   <div key={img.publicId} className="relative w-20 h-20">
@@ -171,6 +247,7 @@ export default function EditProductPage() {
                       alt=""
                       fill
                       className="object-cover rounded-xl"
+                      style={{ objectPosition: img.objectPosition || 'center center' }}
                     />
                     <button
                       type="button"
@@ -190,32 +267,14 @@ export default function EditProductPage() {
             </div>
           )}
 
-          {/* New images */}
-          {newPreviews.length > 0 && (
-            <div className="mb-3">
-              <p className="text-xs text-gray-500 mb-2">Imágenes nuevas</p>
-              <div className="flex flex-wrap gap-3">
-                {newPreviews.map((src, i) => (
-                  <div key={i} className="relative w-20 h-20">
-                    <img src={src} alt="" className="w-full h-full object-cover rounded-xl" />
-                    <button
-                      type="button"
-                      onClick={() => removeNewImage(i)}
-                      className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-xs"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+          {/* New images with position preview */}
+          {maxNewImages > 0 && (
+            <div>
+              {product.images && product.images.length > 0 && (
+                <p className="text-xs text-gray-500 mb-2 font-medium">Agregar imágenes nuevas</p>
+              )}
+              <ProductImageUpload maxImages={maxNewImages} onChange={setNewImageEntries} />
             </div>
-          )}
-
-          {totalImages < 5 && (
-            <label className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-green-400 transition-colors">
-              <Upload className="h-5 w-5 text-gray-400" />
-              <input type="file" accept="image/*" multiple onChange={handleNewImages} className="hidden" />
-            </label>
           )}
         </div>
 
@@ -299,17 +358,36 @@ export default function EditProductPage() {
             <input {...register('locationName')} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
             {errors.locationName && <p className="text-red-500 text-xs mt-1">{errors.locationName.message}</p>}
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pais *</label>
+            <select {...register('locationCountry')} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 bg-white">
+              {countryOptions.map((country) => (
+                <option key={country.code} value={country.code}>{country.name}</option>
+              ))}
+            </select>
+            {errors.locationCountry && <p className="text-red-500 text-xs mt-1">{errors.locationCountry.message}</p>}
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Provincia *</label>
-              <input {...register('locationProvince')} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">{countryConfig.regionLabel} *</label>
+              <input list="edit-province-options" {...register('locationProvince')} placeholder={`Buscar ${countryConfig.regionLabel.toLowerCase()}...`} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
+              <datalist id="edit-province-options">
+                {regionOptions.map((region) => <option key={region} value={region} />)}
+              </datalist>
               {errors.locationProvince && <p className="text-red-500 text-xs mt-1">{errors.locationProvince.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Municipio *</label>
-              <input {...register('locationMunicipality')} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">{countryConfig.municipalityLabel} *</label>
+              <input list="edit-municipality-options" {...register('locationMunicipality')} placeholder={`Buscar ${countryConfig.municipalityLabel.toLowerCase()}...`} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
+              <datalist id="edit-municipality-options">
+                {municipalityOptions.map((municipality) => <option key={municipality} value={municipality} />)}
+              </datalist>
               {errors.locationMunicipality && <p className="text-red-500 text-xs mt-1">{errors.locationMunicipality.message}</p>}
             </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{countryConfig.postalCodeLabel} (opcional)</label>
+            <input {...register('locationPostalCode')} placeholder="Ej: 5500" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
           </div>
         </div>
 
@@ -332,3 +410,5 @@ export default function EditProductPage() {
     </div>
   )
 }
+
+

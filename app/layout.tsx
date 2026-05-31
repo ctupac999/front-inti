@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "./providers";
 import Navbar from "@/components/layout/Navbar";
+import BackendPing from "@/components/BackendPing";
 import Link from "next/link";
 
 const geistSans = Geist({
@@ -33,6 +34,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-gray-50" suppressHydrationWarning>
         <Providers>
+          <BackendPing />
           <Navbar />
           <main className="flex-1" suppressHydrationWarning>{children}</main>
           <footer className="border-t bg-white">
@@ -44,6 +46,9 @@ export default function RootLayout({
                 </Link>
                 <Link href="/legal/privacy" className="hover:text-green-700 hover:underline">
                   Política de Privacidad
+                </Link>
+                <Link href="/legal/cookies" className="hover:text-green-700 hover:underline">
+                  Cookies
                 </Link>
               </div>
             </div>

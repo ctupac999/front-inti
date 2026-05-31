@@ -11,6 +11,11 @@ import Link from 'next/link'
 import { toast } from 'sonner'
 import { Sprout, Eye, EyeOff } from 'lucide-react'
 
+const getErrorMessage = (err: unknown, fallback: string) => {
+  if (err instanceof Error && err.message) return err.message
+  return fallback
+}
+
 const schema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
@@ -33,8 +38,8 @@ export default function LoginPage() {
       const loggedUser = await login(data.email, data.password)
       toast.success(t('auth.login.welcome'))
       router.push(loggedUser?.role === 'admin' ? '/admin' : '/dashboard')
-    } catch (err: any) {
-      toast.error(err.message || t('auth.login.error'))
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, t('auth.login.error')))
     }
   }
 

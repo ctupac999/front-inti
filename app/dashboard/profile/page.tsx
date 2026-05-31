@@ -20,6 +20,7 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!loading && !user) router.push('/auth/login')
     if (user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setForm({
         firstName: user.firstName || '',
         lastName: user.lastName || '',
@@ -36,8 +37,8 @@ export default function ProfilePage() {
       await updateProfile(form)
       await refreshUser()
       toast.success(t('profile.saved'))
-    } catch (err: any) {
-      toast.error(err.message || 'Error al guardar')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'Error al guardar')
     } finally {
       setSaving(false)
     }
@@ -51,8 +52,8 @@ export default function ProfilePage() {
       await uploadAvatar(file)
       await refreshUser()
       toast.success(t('profile.avatarUpdated'))
-    } catch (err: any) {
-      toast.error(err.message || 'Error al subir imagen')
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : 'Error al subir imagen')
     } finally {
       setUploading(false)
     }

@@ -1,4 +1,4 @@
-import { get, post, patch, patchForm, postForm } from '@/utils/api'
+import { get, post } from '@/utils/api'
 import { API_ROUTES } from '@/utils/api-config'
 import type { AuthResponse, User } from '@/types/user'
 

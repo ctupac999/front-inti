@@ -11,4 +11,6 @@ export interface SiteConfig {
   whatsappNumber: string
   aboutText: string
   allowRegistrations: boolean
+  enabledCountries: string[]
+  legalVersion: string
 }

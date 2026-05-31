@@ -5,8 +5,9 @@ import { getProducts, type FilterParams } from '@/services/product-service'
 import type { Product } from '@/types/product'
 import { CATEGORY_LABELS } from '@/types/product'
 import { useLanguage } from '@/contexts/language-context'
-import { Search, MapPin, SlidersHorizontal, Leaf } from 'lucide-react'
+import { Search, MapPin, Leaf } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const CATEGORIES = Object.keys(CATEGORY_LABELS) as (keyof typeof CATEGORY_LABELS)[]
 
@@ -14,7 +15,7 @@ export default function ProductsPage() {
   const { t } = useLanguage()
   const [products, setProducts] = useState<Product[]>([])
   const [total, setTotal] = useState(0)
-  const [page, setPage] = useState(1)
+  const [page] = useState(1)
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState<FilterParams>({ page: 1, limit: 12 })
   const [search, setSearch] = useState('')
@@ -32,6 +33,7 @@ export default function ProductsPage() {
     }
   }
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchProducts(filters) }, [filters])
 
   const applySearch = () => setFilters((f) => ({ ...f, search, page: 1 }))
@@ -90,12 +92,15 @@ export default function ProductsPage() {
         <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
           {products.map((p) => (
             <Link key={p._id} href={`/productos/${p._id}`} className="group block rounded-2xl border bg-white overflow-hidden hover:shadow-md hover:border-green-200 transition-all">
-              <div className="aspect-square bg-green-50 overflow-hidden">
+              <div className="aspect-square bg-green-50 overflow-hidden relative">
                 {p.images[0] ? (
-                  <img
+                  <Image
                     src={p.images[0].url}
                     alt={p.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    style={{ objectPosition: p.images[0].objectPosition || 'center center' }}
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-5xl">🌾</div>

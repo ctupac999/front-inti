@@ -5,8 +5,47 @@ import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/navigation'
 import { getSiteConfig, updateSiteConfig, uploadLogo } from '@/services/site-config-service'
 import type { SiteConfig } from '@/types/site-config'
+import {
+  FALLBACK_ENABLED_COUNTRY_CODES,
+  getCountryOptions,
+} from '@/config/location-catalog'
 import { toast } from 'sonner'
 import { Save, Upload, Sprout } from 'lucide-react'
+import Image from 'next/image'
+
+const getErrorMessage = (err: unknown, fallback: string) => {
+  if (err instanceof Error && err.message) return err.message
+  return fallback
+}
+
+const GENERAL_FIELDS: Array<{
+  key: 'siteName' | 'siteSlogan' | 'contactEmail' | 'contactPhone'
+  label: string
+  placeholder: string
+}> = [
+  { key: 'siteName', label: 'Nombre del sitio', placeholder: 'Trueque del Campo' },
+  { key: 'siteSlogan', label: 'Eslogan', placeholder: 'Intercambia lo que cosechas' },
+  { key: 'contactEmail', label: 'Email de contacto', placeholder: 'contacto@trueque.com' },
+  { key: 'contactPhone', label: 'Telefono de contacto', placeholder: '+54 9 11...' },
+]
+
+const SOCIAL_FIELDS: Array<{
+  key: 'facebookUrl' | 'instagramUrl' | 'whatsappNumber'
+  label: string
+  placeholder: string
+}> = [
+  { key: 'facebookUrl', label: 'Facebook URL', placeholder: 'https://facebook.com/...' },
+  { key: 'instagramUrl', label: 'Instagram URL', placeholder: 'https://instagram.com/...' },
+  { key: 'whatsappNumber', label: 'WhatsApp (numero)', placeholder: '5491112345678' },
+]
+
+const COLOR_FIELDS: Array<{
+  key: 'primaryColor' | 'secondaryColor'
+  label: string
+}> = [
+  { key: 'primaryColor', label: 'Color primario' },
+  { key: 'secondaryColor', label: 'Color secundario' },
+]
 
 export default function AdminConfigPage() {
   const { user, loading, isAdmin } = useAuth()
@@ -15,16 +54,31 @@ export default function AdminConfigPage() {
   const [saving, setSaving] = useState(false)
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [logoPreview, setLogoPreview] = useState<string | null>(null)
+  const allCountryOptions = getCountryOptions(FALLBACK_ENABLED_COUNTRY_CODES)
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) router.push('/')
   }, [user, loading, isAdmin, router])
 
   useEffect(() => {
-    if (isAdmin) getSiteConfig().then(setConfig).catch(() => null)
+    if (!isAdmin) return
+
+    getSiteConfig()
+      .then((incoming) => {
+        const enabledCountries =
+          incoming.enabledCountries && incoming.enabledCountries.length > 0
+            ? incoming.enabledCountries
+            : FALLBACK_ENABLED_COUNTRY_CODES
+
+        setConfig({
+          ...incoming,
+          enabledCountries,
+        })
+      })
+      .catch(() => null)
   }, [isAdmin])
 
-  const handleChange = (key: keyof SiteConfig, value: any) => {
+  const handleChange = <K extends keyof SiteConfig>(key: K, value: SiteConfig[K]) => {
     setConfig((prev) => prev ? { ...prev, [key]: value } : prev)
   }
 
@@ -36,8 +90,25 @@ export default function AdminConfigPage() {
     }
   }
 
+  const toggleCountry = (countryCode: string) => {
+    if (!config) return
+
+    const current = config.enabledCountries ?? []
+    const exists = current.includes(countryCode)
+    const next = exists
+      ? current.filter((code) => code !== countryCode)
+      : [...current, countryCode]
+
+    handleChange('enabledCountries', next)
+  }
+
   const handleSave = async () => {
     if (!config) return
+    if (!config.enabledCountries || config.enabledCountries.length === 0) {
+      toast.error('Debes habilitar al menos un pais')
+      return
+    }
+
     setSaving(true)
     try {
       if (logoFile) {
@@ -46,11 +117,29 @@ export default function AdminConfigPage() {
         setLogoFile(null)
         toast.success('Logo actualizado')
       }
-      const { logo, ...rest } = config
-      await updateSiteConfig(rest)
+
+      const { ...rest } = config
+
+      const payload = {
+        siteName: rest.siteName,
+        siteSlogan: rest.siteSlogan,
+        contactEmail: rest.contactEmail,
+        contactPhone: rest.contactPhone,
+        primaryColor: rest.primaryColor,
+        secondaryColor: rest.secondaryColor,
+        facebookUrl: rest.facebookUrl,
+        instagramUrl: rest.instagramUrl,
+        whatsappNumber: rest.whatsappNumber,
+        aboutText: rest.aboutText,
+        allowRegistrations: rest.allowRegistrations,
+        enabledCountries: rest.enabledCountries,
+        legalVersion: rest.legalVersion,
+      }
+
+      await updateSiteConfig(payload)
       toast.success('Configuracion guardada')
-    } catch (err: any) {
-      toast.error(err.message || 'Error al guardar')
+    } catch (err: unknown) {
+      toast.error(getErrorMessage(err, 'Error al guardar'))
     } finally {
       setSaving(false)
     }
@@ -84,9 +173,9 @@ export default function AdminConfigPage() {
         <div className="bg-white rounded-2xl border p-6">
           <h2 className="font-semibold text-gray-900 mb-4">Logo del sitio</h2>
           <div className="flex items-center gap-6">
-            <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50">
+            <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-gray-300 flex items-center justify-center overflow-hidden bg-gray-50 relative">
               {logoPreview || config.logo?.url ? (
-                <img src={logoPreview || config.logo.url} alt="logo" className="w-full h-full object-contain p-2" />
+                <Image src={logoPreview || config.logo.url} alt="logo" fill className="object-contain p-2" />
               ) : (
                 <Sprout className="h-8 w-8 text-gray-400" />
               )}
@@ -104,17 +193,12 @@ export default function AdminConfigPage() {
         {/* Info general */}
         <div className="bg-white rounded-2xl border p-6 space-y-4">
           <h2 className="font-semibold text-gray-900">Informacion general</h2>
-          {[
-            { key: 'siteName', label: 'Nombre del sitio', placeholder: 'Trueque del Campo' },
-            { key: 'siteSlogan', label: 'Eslogan', placeholder: 'Intercambia lo que cosechas' },
-            { key: 'contactEmail', label: 'Email de contacto', placeholder: 'contacto@trueque.com' },
-            { key: 'contactPhone', label: 'Telefono de contacto', placeholder: '+54 9 11...' },
-          ].map(({ key, label, placeholder }) => (
+          {GENERAL_FIELDS.map(({ key, label, placeholder }) => (
             <div key={key}>
               <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
               <input
-                value={(config as any)[key] || ''}
-                onChange={(e) => handleChange(key as keyof SiteConfig, e.target.value)}
+                value={config[key] || ''}
+                onChange={(e) => handleChange(key, e.target.value)}
                 placeholder={placeholder}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
               />
@@ -135,16 +219,12 @@ export default function AdminConfigPage() {
         {/* Redes sociales */}
         <div className="bg-white rounded-2xl border p-6 space-y-4">
           <h2 className="font-semibold text-gray-900">Redes sociales</h2>
-          {[
-            { key: 'facebookUrl', label: 'Facebook URL', placeholder: 'https://facebook.com/...' },
-            { key: 'instagramUrl', label: 'Instagram URL', placeholder: 'https://instagram.com/...' },
-            { key: 'whatsappNumber', label: 'WhatsApp (numero)', placeholder: '5491112345678' },
-          ].map(({ key, label, placeholder }) => (
+          {SOCIAL_FIELDS.map(({ key, label, placeholder }) => (
             <div key={key}>
               <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
               <input
-                value={(config as any)[key] || ''}
-                onChange={(e) => handleChange(key as keyof SiteConfig, e.target.value)}
+                value={config[key] || ''}
+                onChange={(e) => handleChange(key, e.target.value)}
                 placeholder={placeholder}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
               />
@@ -156,20 +236,17 @@ export default function AdminConfigPage() {
         <div className="bg-white rounded-2xl border p-6 space-y-4">
           <h2 className="font-semibold text-gray-900">Colores de la marca</h2>
           <div className="grid grid-cols-2 gap-4">
-            {[
-              { key: 'primaryColor', label: 'Color primario' },
-              { key: 'secondaryColor', label: 'Color secundario' },
-            ].map(({ key, label }) => (
+            {COLOR_FIELDS.map(({ key, label }) => (
               <div key={key} className="flex items-center gap-3">
                 <input
                   type="color"
-                  value={(config as any)[key] || '#2d6a4f'}
-                  onChange={(e) => handleChange(key as keyof SiteConfig, e.target.value)}
+                  value={config[key] || '#2d6a4f'}
+                  onChange={(e) => handleChange(key, e.target.value)}
                   className="w-12 h-12 rounded-lg border border-gray-300 cursor-pointer p-1"
                 />
                 <div>
                   <p className="text-sm font-medium text-gray-700">{label}</p>
-                  <p className="text-xs text-gray-400">{(config as any)[key]}</p>
+                  <p className="text-xs text-gray-400">{config[key]}</p>
                 </div>
               </div>
             ))}
@@ -191,6 +268,28 @@ export default function AdminConfigPage() {
               <p className="text-xs text-gray-400">Si esta desactivado, nadie nuevo puede registrarse</p>
             </div>
           </label>
+
+          <div className="mt-6">
+            <p className="text-sm font-medium text-gray-700 mb-1">Paises habilitados para publicar productos</p>
+            <p className="text-xs text-gray-400 mb-3">Solo estos paises apareceran en el formulario de alta de productos.</p>
+            <div className="max-h-72 overflow-y-auto rounded-xl border border-gray-200 p-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {allCountryOptions.map((country) => {
+                const checked = (config.enabledCountries ?? []).includes(country.code)
+                return (
+                  <label key={country.code} className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-gray-50 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={() => toggleCountry(country.code)}
+                      className="rounded border-gray-300 text-green-600"
+                    />
+                    <span className="text-sm text-gray-700">{country.name}</span>
+                    <span className="text-xs text-gray-400">({country.code})</span>
+                  </label>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>

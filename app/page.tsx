@@ -7,12 +7,12 @@ import { useLanguage } from '@/contexts/language-context'
 export default function HomePage() {
   const { t } = useLanguage()
   return (
-    <div className="flex flex-col">
+    <main className="flex flex-col">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 py-24 px-4">
         <div className="container mx-auto max-w-4xl text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-green-100 px-4 py-1.5 text-sm font-medium text-green-700 mb-6">
-            <Leaf className="size-4" />
+            <Leaf aria-hidden="true" className="size-4" />
             {t('home.badge')}
           </div>
           <h1 className="text-5xl md:text-6xl font-semibold text-zinc-900 mb-6 leading-tight">
@@ -28,7 +28,7 @@ export default function HomePage() {
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-green-600 px-8 py-3.5 text-base font-semibold text-white hover:bg-green-700 transition-colors shadow-lg shadow-green-200"
             >
               {t('home.hero.cta.products')}
-              <ArrowRight className="size-5" />
+              <ArrowRight aria-hidden="true" className="size-5" />
             </Link>
             <Link
               href="/auth/register"
@@ -49,21 +49,21 @@ export default function HomePage() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="rounded-2xl bg-green-50 p-8 text-center hover:shadow-md transition-shadow">
               <div className="inline-flex items-center justify-center size-16 rounded-full bg-white shadow-sm mb-4">
-                <Sprout className="size-8 text-green-600" />
+                <Sprout aria-hidden="true" className="size-8 text-green-600" />
               </div>
               <h3 className="text-lg font-semibold text-zinc-900 mb-2">{t('home.step1.title')}</h3>
               <p className="text-zinc-600 text-sm">{t('home.step1.desc')}</p>
             </div>
             <div className="rounded-2xl bg-green-50 p-8 text-center hover:shadow-md transition-shadow">
               <div className="inline-flex items-center justify-center size-16 rounded-full bg-white shadow-sm mb-4">
-                <MapPin className="size-8 text-green-600" />
+                <MapPin aria-hidden="true" className="size-8 text-green-600" />
               </div>
               <h3 className="text-lg font-semibold text-zinc-900 mb-2">{t('home.step2.title')}</h3>
               <p className="text-zinc-600 text-sm">{t('home.step2.desc')}</p>
             </div>
             <div className="rounded-2xl bg-green-50 p-8 text-center hover:shadow-md transition-shadow">
               <div className="inline-flex items-center justify-center size-16 rounded-full bg-white shadow-sm mb-4">
-                <Handshake className="size-8 text-green-600" />
+                <Handshake aria-hidden="true" className="size-8 text-green-600" />
               </div>
               <h3 className="text-lg font-semibold text-zinc-900 mb-2">{t('home.step3.title')}</h3>
               <p className="text-zinc-600 text-sm">{t('home.step3.desc')}</p>
@@ -81,10 +81,10 @@ export default function HomePage() {
             href="/auth/register"
             className="inline-flex items-center gap-2 rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-green-700 hover:bg-green-50 transition-colors"
           >
-            {t('home.cta.button')} <ArrowRight className="size-5" />
+            {t('home.cta.button')} <ArrowRight aria-hidden="true" className="size-5" />
           </Link>
         </div>
       </section>
-    </div>
+    </main>
   )
 }

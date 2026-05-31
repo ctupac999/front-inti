@@ -11,6 +11,7 @@ import type { Product } from '@/types/product'
 import type { Trade } from '@/types/trade'
 import { CATEGORY_LABELS } from '@/types/product'
 import { Package, Handshake, MapPin, Plus, ChevronRight, Leaf } from 'lucide-react'
+import Image from 'next/image'
 
 export default function DashboardPage() {
   const { user, loading } = useAuth()
@@ -126,7 +127,7 @@ export default function DashboardPage() {
             {products.slice(0, 5).map((p) => (
               <div key={p._id} className="flex items-center gap-3 rounded-xl border border-gray-100 p-3 hover:border-green-200 transition-colors">
                 {p.images[0] ? (
-                  <img src={p.images[0].url} alt={p.title} className="w-12 h-12 rounded-lg object-cover" />
+                  <Image src={p.images[0].url} alt={p.title} width={48} height={48} className="rounded-lg object-cover" />
                 ) : (
                   <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center text-xl">
                     🌾

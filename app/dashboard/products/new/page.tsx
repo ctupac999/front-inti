@@ -10,8 +10,19 @@ import { useLanguage } from '@/contexts/language-context'
 import { createProduct } from '@/services/product-service'
 import { CATEGORY_LABELS, UNIT_OPTIONS } from '@/types/product'
 import { toast } from 'sonner'
-import { Upload, X, Leaf } from 'lucide-react'
+import { Upload, Leaf } from 'lucide-react'
 import { useEffect } from 'react'
+import ProductImageUpload, { type ImageEntry } from '@/components/products/ProductImageUpload'
+import { getSiteConfig } from '@/services/site-config-service'
+import {
+  DEFAULT_COUNTRY_CODE,
+  FALLBACK_ENABLED_COUNTRY_CODES,
+  getCountryConfig,
+  getCountryOptions,
+  isCountryCodeEnabled,
+  getMunicipalityOptions,
+  getRegionOptions,
+} from '@/config/location-catalog'
 
 const schema = z.object({
   title: z.string().min(3, 'Minimo 3 caracteres'),
@@ -20,8 +31,10 @@ const schema = z.object({
   quantity: z.string().min(1, 'Ingresa la cantidad'),
   unit: z.string().min(1, 'Selecciona la unidad'),
   locationName: z.string().min(1, 'Nombre del lugar requerido'),
+  locationCountry: z.string().min(1, 'Pais requerido'),
   locationProvince: z.string().min(1, 'Provincia requerida'),
   locationMunicipality: z.string().min(1, 'Municipio requerido'),
+  locationPostalCode: z.string().optional(),
   lookingFor: z.string().optional(),
   isOrganic: z.boolean().optional(),
   harvestDate: z.string().optional(),
@@ -33,27 +46,79 @@ export default function NewProductPage() {
   const { user, loading } = useAuth()
   const { t } = useLanguage()
   const router = useRouter()
-  const [images, setImages] = useState<File[]>([])
-  const [previews, setPreviews] = useState<string[]>([])
+  const [imageEntries, setImageEntries] = useState<ImageEntry[]>([])
+  const [enabledCountryCodes, setEnabledCountryCodes] = useState<string[]>(
+    FALLBACK_ENABLED_COUNTRY_CODES,
+  )
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, watch, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      locationCountry: DEFAULT_COUNTRY_CODE,
+    },
   })
+
+  // eslint-disable-next-line react-hooks/incompatible-library
+  const selectedCountry = watch('locationCountry') || DEFAULT_COUNTRY_CODE
+  const selectedProvince = watch('locationProvince') || ''
+  const selectedMunicipality = watch('locationMunicipality') || ''
+  const countryOptions = getCountryOptions(enabledCountryCodes)
+  const defaultCountryCode = countryOptions.some(
+    (country) => country.code === DEFAULT_COUNTRY_CODE,
+  )
+    ? DEFAULT_COUNTRY_CODE
+    : (countryOptions[0]?.code ?? DEFAULT_COUNTRY_CODE)
+  const resolvedSelectedCountry = countryOptions.some(
+    (country) => country.code === selectedCountry,
+  )
+    ? selectedCountry
+    : defaultCountryCode
+  const countryConfig = getCountryConfig(resolvedSelectedCountry, enabledCountryCodes)
+  const regionOptions = getRegionOptions(resolvedSelectedCountry)
+  const municipalityOptions = getMunicipalityOptions(resolvedSelectedCountry, selectedProvince)
 
   useEffect(() => {
     if (!loading && !user) router.push('/auth/login')
   }, [user, loading, router])
 
-  const handleImages = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []).slice(0, 5)
-    setImages(files)
-    setPreviews(files.map((f) => URL.createObjectURL(f)))
-  }
+  useEffect(() => {
+    let isMounted = true
 
-  const removeImage = (i: number) => {
-    setImages((prev) => prev.filter((_, idx) => idx !== i))
-    setPreviews((prev) => prev.filter((_, idx) => idx !== i))
-  }
+    getSiteConfig()
+      .then((config) => {
+        if (!isMounted) return
+        const fromAdmin = (config.enabledCountries ?? [])
+          .map((code) => code.trim().toUpperCase())
+          .filter(Boolean)
+        if (fromAdmin.length > 0) setEnabledCountryCodes(fromAdmin)
+      })
+      .catch(() => null)
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!isCountryCodeEnabled(selectedCountry, enabledCountryCodes)) {
+      setValue('locationCountry', defaultCountryCode)
+    }
+  }, [selectedCountry, enabledCountryCodes, defaultCountryCode, setValue])
+
+  useEffect(() => {
+    setValue('locationProvince', '')
+    setValue('locationMunicipality', '')
+  }, [resolvedSelectedCountry, setValue])
+
+  useEffect(() => {
+    const validMunicipalities = getMunicipalityOptions(
+      resolvedSelectedCountry,
+      selectedProvince,
+    )
+    if (selectedMunicipality && !validMunicipalities.includes(selectedMunicipality)) {
+      setValue('locationMunicipality', '')
+    }
+  }, [resolvedSelectedCountry, selectedProvince, selectedMunicipality, setValue])
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -64,18 +129,21 @@ export default function NewProductPage() {
       form.append('quantity', String(data.quantity))
       form.append('unit', data.unit)
       form.append('location[name]', data.locationName)
+      form.append('location[country]', data.locationCountry)
       form.append('location[province]', data.locationProvince)
       form.append('location[municipality]', data.locationMunicipality)
+      if (data.locationPostalCode) form.append('location[postalCode]', data.locationPostalCode)
       if (data.lookingFor) form.append('lookingFor', data.lookingFor)
       if (data.isOrganic) form.append('isOrganic', 'true')
       if (data.harvestDate) form.append('harvestDate', data.harvestDate)
-      images.forEach((img) => form.append('images', img))
+      imageEntries.forEach((entry) => form.append('images', entry.file))
+      form.append('imagePositions', JSON.stringify(imageEntries.map((e) => e.objectPosition)))
 
       await createProduct(form)
       toast.success(t('newProduct.success'))
       router.push('/dashboard')
-    } catch (err: any) {
-      toast.error(err.message || t('newProduct.error'))
+    } catch (err: unknown) {
+      toast.error(err instanceof Error && err.message ? err.message : t('newProduct.error'))
     }
   }
 
@@ -94,26 +162,7 @@ export default function NewProductPage() {
           <h2 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
             <Upload className="h-4 w-4" /> {t('newProduct.photos')}
           </h2>
-          <div className="flex flex-wrap gap-3 mb-3">
-            {previews.map((src, i) => (
-              <div key={i} className="relative w-20 h-20">
-                <img src={src} alt="" className="w-full h-full object-cover rounded-xl" />
-                <button
-                  type="button"
-                  onClick={() => removeImage(i)}
-                  className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-xs"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </div>
-            ))}
-            {previews.length < 5 && (
-              <label className="w-20 h-20 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-green-400 transition-colors">
-                <Upload className="h-5 w-5 text-gray-400" />
-                <input type="file" accept="image/*" multiple onChange={handleImages} className="hidden" />
-              </label>
-            )}
-          </div>
+          <ProductImageUpload maxImages={5} onChange={setImageEntries} />
         </div>
 
         {/* Info basica */}
@@ -186,17 +235,36 @@ export default function NewProductPage() {
             <input {...register('locationName')} placeholder="Ej: Finca El Roble" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
             {errors.locationName && <p className="text-red-500 text-xs mt-1">{errors.locationName.message}</p>}
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Pais *</label>
+            <select {...register('locationCountry')} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 bg-white">
+              {countryOptions.map((country) => (
+                <option key={country.code} value={country.code}>{country.name}</option>
+              ))}
+            </select>
+            {errors.locationCountry && <p className="text-red-500 text-xs mt-1">{errors.locationCountry.message}</p>}
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t('locations.province')} *</label>
-              <input {...register('locationProvince')} placeholder="Ej: Mendoza" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">{countryConfig.regionLabel} *</label>
+              <input list="province-options" {...register('locationProvince')} placeholder={`Buscar ${countryConfig.regionLabel.toLowerCase()}...`} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
+              <datalist id="province-options">
+                {regionOptions.map((region) => <option key={region} value={region} />)}
+              </datalist>
               {errors.locationProvince && <p className="text-red-500 text-xs mt-1">{errors.locationProvince.message}</p>}
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t('locations.municipality')} *</label>
-              <input {...register('locationMunicipality')} placeholder="Ej: Lujan de Cuyo" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">{countryConfig.municipalityLabel} *</label>
+              <input list="municipality-options" {...register('locationMunicipality')} placeholder={`Buscar ${countryConfig.municipalityLabel.toLowerCase()}...`} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
+              <datalist id="municipality-options">
+                {municipalityOptions.map((municipality) => <option key={municipality} value={municipality} />)}
+              </datalist>
               {errors.locationMunicipality && <p className="text-red-500 text-xs mt-1">{errors.locationMunicipality.message}</p>}
             </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{countryConfig.postalCodeLabel} (opcional)</label>
+            <input {...register('locationPostalCode')} placeholder="Ej: 5500" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
           </div>
         </div>
 
