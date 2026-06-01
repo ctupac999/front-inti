@@ -133,6 +133,15 @@ const qu: Record<string, string> = {
   'dashboard.noProducts': 'Mana mikhunay qhawarichisqachu',
   'dashboard.publishFirst': 'Ñawpaq qhawarichiy',
 
+  // Notifications
+  'notifications.title': 'Willaykuna',
+  'notifications.empty': 'Mana willaykunachu',
+  'notifications.unread': 'mana ñawinchasqa',
+  'notifications.all': 'Tukuy',
+  'notifications.unreadOnly': 'Mana ñawinchasqa',
+  'notifications.markAllRead': 'Tukuyta ñawinchasqa ruway',
+  'notifications.viewAll': 'Tukuy willaykunata qhawariy',
+
   // Trades
   'trades.title': 'Ñuqap Aynikuna',
   'trades.accepted': 'Ayni chaskinqasqa',
@@ -146,6 +155,9 @@ const qu: Record<string, string> = {
   'trades.reject': 'Mana chaskiy',
   'trades.cancel': 'Qhesichiy',
   'trades.from': 'Maymanta:',
+  'trades.contactInfo': 'Willanakuy información',
+  'trades.showContact': 'Willanakuyta qhawariy',
+
   'trades.loadError': 'Aynikuna ñawinchaypi pantay',
 
   // Profile

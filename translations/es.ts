@@ -153,6 +153,8 @@ const es: Record<string, string> = {
   'trades.reject': 'Rechazar',
   'trades.cancel': 'Cancelar',
   'trades.from': 'De:',
+  'trades.contactInfo': 'Información de contacto',
+  'trades.showContact': 'Ver datos de contacto',
 
   // Profile
   'profile.title': 'Mi Perfil',
@@ -296,6 +298,15 @@ const es: Record<string, string> = {
   'products.search': 'Buscar',
   'products.allCategories': 'Todas las categorías',
   'products.noResults': 'No hay productos disponibles con esos filtros',
+
+  // Notifications
+  'notifications.title': 'Notificaciones',
+  'notifications.empty': 'Sin notificaciones',
+  'notifications.unread': 'sin leer',
+  'notifications.all': 'Todas',
+  'notifications.unreadOnly': 'No leídas',
+  'notifications.markAllRead': 'Marcar todas como leídas',
+  'notifications.viewAll': 'Ver todas las notificaciones',
 
   // Trades extras
   'trades.loadError': 'Error al cargar trueques',

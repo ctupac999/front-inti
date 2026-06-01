@@ -153,6 +153,9 @@ const en: Record<string, string> = {
   'trades.reject': 'Decline',
   'trades.cancel': 'Cancel',
   'trades.from': 'From:',
+  'trades.contactInfo': 'Contact information',
+  'trades.showContact': 'Show contact details',
+
 
   // Profile
   'profile.title': 'My Profile',
@@ -303,6 +306,15 @@ const en: Record<string, string> = {
   'products.search': 'Search',
   'products.allCategories': 'All categories',
   'products.noResults': 'No products available with those filters',
+
+  // Notifications
+  'notifications.title': 'Notifications',
+  'notifications.empty': 'No notifications',
+  'notifications.unread': 'unread',
+  'notifications.all': 'All',
+  'notifications.unreadOnly': 'Unread',
+  'notifications.markAllRead': 'Mark all as read',
+  'notifications.viewAll': 'View all notifications',
 
   // Trades extras
   'trades.loadError': 'Error loading trades',

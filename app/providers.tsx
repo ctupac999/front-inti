@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { AuthProvider } from '@/contexts/auth-context'
 import { LanguageProvider } from '@/contexts/language-context'
+import { SocketProvider } from '@/contexts/socket-context'
 import { useSiteConfigStore } from '@/stores/site-config-store'
 import { getSiteConfig } from '@/services/site-config-service'
 import { Toaster } from '@/components/ui/sonner'
@@ -19,10 +20,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <LanguageProvider>
       <AuthProvider>
-        <LegalConsentGuard />
-        {children}
-        <Toaster richColors position="top-right" />
-        <CookieConsentBanner />
+        <SocketProvider>
+          <LegalConsentGuard />
+          {children}
+          <Toaster richColors position="top-right" />
+          <CookieConsentBanner />
+        </SocketProvider>
       </AuthProvider>
     </LanguageProvider>
   )

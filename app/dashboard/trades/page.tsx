@@ -5,10 +5,21 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/auth-context'
 import { useLanguage } from '@/contexts/language-context'
 import { getMyTrades, respondTrade, cancelTrade } from '@/services/trade-service'
+import { get } from '@/utils/api'
+import { API_ROUTES } from '@/utils/api-config'
 import { Trade, TRADE_STATUS_LABELS } from '@/types/trade'
 import { toast } from 'sonner'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle, XCircle, Clock } from 'lucide-react'
+import {
+  ArrowLeft,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Eye,
+  MapPin,
+  Phone,
+  Mail,
+} from 'lucide-react'
 
 const statusColor: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-700',
@@ -25,6 +36,14 @@ export default function TradesPage() {
   const [trades, setTrades] = useState<Trade[]>([])
   const [fetching, setFetching] = useState(true)
   const [tab, setTab] = useState<'received' | 'sent'>('received')
+  const [contactInfo, setContactInfo] = useState<Record<string, {
+    firstName: string
+    lastName: string
+    email: string
+    phone?: string
+    locations?: Array<{ name?: string; province?: string; municipality?: string }>
+  } | null>>({})
+  const [loadingContact, setLoadingContact] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
     if (!loading && !user) router.push('/auth/login')
@@ -57,6 +76,24 @@ export default function TradesPage() {
       toast.success(status === 'accepted' ? t('trades.accepted') : t('trades.rejected'))
     } catch (err: unknown) {
       toast.error(err instanceof Error && err.message ? err.message : 'Error')
+    }
+  }
+
+  const fetchContact = async (tradeId: string) => {
+    setLoadingContact((prev) => ({ ...prev, [tradeId]: true }))
+    try {
+      const data = await get<{
+        firstName: string
+        lastName: string
+        email: string
+        phone?: string
+        locations?: Array<{ name?: string; province?: string; municipality?: string }>
+      }>(API_ROUTES.tradeContact(tradeId))
+      setContactInfo((prev) => ({ ...prev, [tradeId]: data }))
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Error')
+    } finally {
+      setLoadingContact((prev) => ({ ...prev, [tradeId]: false }))
     }
   }
 
@@ -147,6 +184,52 @@ export default function TradesPage() {
                       </button>
                     )}
                   </div>
+
+                  {trade.status === 'accepted' && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      {contactInfo[trade._id] ? (
+                        <div className="p-3 bg-green-50 rounded-xl text-sm space-y-2">
+                          <p className="font-semibold text-green-800 text-xs uppercase tracking-wider">
+                            {t('trades.contactInfo')}
+                          </p>
+                          <div className="space-y-1.5 text-gray-700">
+                            <p className="font-medium">
+                              {contactInfo[trade._id]!.firstName} {contactInfo[trade._id]!.lastName}
+                            </p>
+                            <div className="flex items-center gap-1.5 text-xs">
+                              <Mail className="h-3.5 w-3.5 text-gray-400" />
+                              {contactInfo[trade._id]!.email}
+                            </div>
+                            {contactInfo[trade._id]!.phone && (
+                              <div className="flex items-center gap-1.5 text-xs">
+                                <Phone className="h-3.5 w-3.5 text-gray-400" />
+                                {contactInfo[trade._id]!.phone}
+                              </div>
+                            )}
+                            {contactInfo[trade._id]!.locations?.map((loc, idx) => (
+                              <div key={idx} className="flex items-center gap-1.5 text-xs">
+                                <MapPin className="h-3.5 w-3.5 text-gray-400" />
+                                {[loc.name, loc.municipality, loc.province].filter(Boolean).join(', ')}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => fetchContact(trade._id)}
+                          disabled={loadingContact[trade._id]}
+                          className="flex items-center gap-1.5 text-xs text-green-600 font-medium hover:text-green-700 transition-colors"
+                        >
+                          {loadingContact[trade._id] ? (
+                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-green-600" />
+                          ) : (
+                            <Eye className="h-3.5 w-3.5" />
+                          )}
+                          {t('trades.showContact')} →
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
               )
             })}

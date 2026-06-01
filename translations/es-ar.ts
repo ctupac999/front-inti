@@ -41,6 +41,17 @@ const esAr: Record<string, string> = {
   // Dashboard - voseo
   'dashboard.myProducts.empty': 'No ten\u00e9s productos publicados',
 
+  // Notifications - voseo
+  'notifications.empty': 'Sin notificaciones',
+  'notifications.unread': 'sin leer',
+  'notifications.all': 'Todas',
+  'notifications.unreadOnly': 'No leídas',
+  'notifications.markAllRead': 'Marcar todas como leídas',
+  'notifications.viewAll': 'Ver todas las notificaciones',
+
+  // Contact info - voseo
+  'trades.showContact': 'Ver datos de contacto',
+
   // New product - voseo
   'newProduct.subtitle': 'Public\u00e1 lo que ten\u00e9s disponible para intercambiar',
   'newProduct.field.lookingFor': 'Qu\u00e9 busc\u00e1s a cambio (opcional)',

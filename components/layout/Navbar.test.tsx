@@ -47,6 +47,15 @@ vi.mock('@/contexts/language-context', () => ({
   useLanguage: () => ({ language: 'es', setLanguage: vi.fn(), t: mockT }),
 }))
 
+vi.mock('@/contexts/socket-context', () => ({
+  useSocket: () => ({
+    unreadCount: 0,
+    notifications: [],
+    setUnreadCount: vi.fn(),
+    addNotification: vi.fn(),
+  }),
+}))
+
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
 }))
@@ -62,6 +71,10 @@ vi.mock('next/image', () => ({
     // eslint-disable-next-line @next/next/no-img-element
     return <img {...props} alt={props.alt as string} />
   },
+}))
+
+vi.mock('@/services/notification-service', () => ({
+  markAllAsRead: vi.fn(),
 }))
 
 vi.mock('next/link', () => ({

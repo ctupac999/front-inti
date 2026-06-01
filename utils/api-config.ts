@@ -38,6 +38,15 @@ export const API_ROUTES = {
   // Product Classification
   productClassification: '/product-classification',
 
+  // Notifications
+  notifications: '/notifications',
+  notificationsUnreadCount: '/notifications/unread-count',
+  notificationsMarkRead: (id: string) => `/notifications/${id}/read`,
+  notificationsReadAll: '/notifications/read-all',
+
+  // Trade contact
+  tradeContact: (id: string) => `/trades/${id}/contact`,
+
   // Legal
   legalVersion: '/legal/version',
 }
