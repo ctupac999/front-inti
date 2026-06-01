@@ -35,6 +35,9 @@ export const API_ROUTES = {
   // Email Templates
   emailTemplates: '/email-templates',
 
+  // Product Classification
+  productClassification: '/product-classification',
+
   // Legal
   legalVersion: '/legal/version',
 }

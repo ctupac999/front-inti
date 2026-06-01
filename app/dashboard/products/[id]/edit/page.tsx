@@ -35,7 +35,6 @@ const schema = z.object({
   locationProvince: z.string().min(1, 'Provincia requerida'),
   locationMunicipality: z.string().min(1, 'Municipio requerido'),
   locationPostalCode: z.string().optional(),
-  lookingFor: z.string().optional(),
   isOrganic: z.boolean().optional(),
   harvestDate: z.string().optional(),
   status: z.string().optional(),
@@ -51,6 +50,9 @@ export default function EditProductPage() {
   const [fetching, setFetching] = useState(true)
   const [newImageEntries, setNewImageEntries] = useState<ImageEntry[]>([])
   const [removingImage, setRemovingImage] = useState<string | null>(null)
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [showOtros, setShowOtros] = useState(false)
+  const [otrosText, setOtrosText] = useState('')
   const [enabledCountryCodes, setEnabledCountryCodes] = useState<string[]>(
     FALLBACK_ENABLED_COUNTRY_CODES,
   )
@@ -105,6 +107,21 @@ export default function EditProductPage() {
     getProduct(id)
       .then((p) => {
         setProduct(p)
+        const categories: string[] = []
+        const otros: string[] = []
+        const validCategories = Object.keys(CATEGORY_LABELS)
+        p.lookingFor?.forEach((val) => {
+          if (validCategories.includes(val)) {
+            categories.push(val)
+          } else {
+            otros.push(val)
+          }
+        })
+        setSelectedCategories(categories)
+        if (otros.length > 0) {
+          setShowOtros(true)
+          setOtrosText(otros.join(', '))
+        }
         reset({
           title: p.title,
           description: p.description,
@@ -116,7 +133,6 @@ export default function EditProductPage() {
           locationProvince: p.location.province,
           locationMunicipality: p.location.municipality,
           locationPostalCode: p.location.postalCode || '',
-          lookingFor: p.lookingFor?.join(', ') || '',
           isOrganic: p.isOrganic,
           harvestDate: p.harvestDate ? p.harvestDate.split('T')[0] : '',
           status: p.status,
@@ -194,7 +210,9 @@ export default function EditProductPage() {
       form.append('location[province]', data.locationProvince)
       form.append('location[municipality]', data.locationMunicipality)
       if (data.locationPostalCode) form.append('location[postalCode]', data.locationPostalCode)
-      if (data.lookingFor) form.append('lookingFor', data.lookingFor)
+      const lookingForValues = [...selectedCategories]
+      if (otrosText.trim()) lookingForValues.push(otrosText.trim())
+      lookingForValues.forEach((val) => form.append('lookingFor', val))
       if (data.isOrganic) form.append('isOrganic', 'true')
       if (data.harvestDate) form.append('harvestDate', data.harvestDate)
       if (data.status) form.append('status', data.status)
@@ -332,8 +350,73 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Qué buscás a cambio (opcional)</label>
-            <input {...register('lookingFor')} placeholder="Ej: frutas, verduras, granos..." className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
+            <label className="block text-sm font-medium text-gray-700 mb-2">Qué buscás a cambio (opcional)</label>
+            <p className="text-xs text-gray-400 mb-2">Seleccioná las categorías que te interesan</p>
+            <div className="grid grid-cols-2 gap-2">
+              {(Object.entries(CATEGORY_LABELS) as [string, string][]).map(([key, label]) => (
+                <label key={key} className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 border border-gray-200 has-[:checked]:border-green-400 has-[:checked]:bg-green-50 transition-colors">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(key)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setSelectedCategories((prev) => [...prev, key])
+                      } else {
+                        setSelectedCategories((prev) => prev.filter((c) => c !== key))
+                      }
+                    }}
+                    className="rounded border-gray-300 text-green-600"
+                  />
+                  <span className="text-sm text-gray-700">{label}</span>
+                </label>
+              ))}
+            </div>
+            <div className="mt-3 flex items-center gap-3">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showOtros}
+                  onChange={(e) => {
+                    setShowOtros(e.target.checked)
+                    if (!e.target.checked) setOtrosText('')
+                  }}
+                  className="rounded border-gray-300 text-green-600"
+                />
+                <span className="text-sm text-gray-700">Otros (especificar)</span>
+              </label>
+              {showOtros && (
+                <input
+                  type="text"
+                  value={otrosText}
+                  onChange={(e) => setOtrosText(e.target.value)}
+                  placeholder="Ej: legumbres, frutos secos..."
+                  className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
+                />
+              )}
+            </div>
+            {(selectedCategories.length > 0 || otrosText.trim()) && (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {[...selectedCategories, ...(otrosText.trim() ? [otrosText.trim()] : [])].map((val) => (
+                  <span key={val} className="inline-flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                    {CATEGORY_LABELS[val as keyof typeof CATEGORY_LABELS] || val}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (CATEGORY_LABELS[val as keyof typeof CATEGORY_LABELS]) {
+                          setSelectedCategories((prev) => prev.filter((c) => c !== val))
+                        } else {
+                          setOtrosText('')
+                          setShowOtros(false)
+                        }
+                      }}
+                      className="ml-0.5 text-green-600 hover:text-green-800"
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-4">

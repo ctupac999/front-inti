@@ -46,6 +46,11 @@ const esAr: Record<string, string> = {
   'newProduct.field.lookingFor': 'Qu\u00e9 busc\u00e1s a cambio (opcional)',
   'newProduct.descriptionPlaceholder': 'Contanos sobre tu producto, c\u00f3mo fue cultivado, etc.',
   'newProduct.lookingFor': 'Qu\u00e9 busc\u00e1s a cambio (opcional)',
+  'newProduct.lookingForHint': 'Seleccion\u00e1 las categor\u00edas que te interesan',
+  'newProduct.classifierTitle': '\u00bfNo sab\u00e9s la categor\u00eda? Busc\u00e1 tu producto',
+  'newProduct.classifierHint': 'Seleccion\u00e1 una sugerencia para autocompletar la categor\u00eda',
+  'newProduct.lookingForOthers': 'Otros (especificar)',
+  'newProduct.lookingForOthersPlaceholder': 'Ej: legumbres, frutos secos...',
 }
 
 export default esAr
