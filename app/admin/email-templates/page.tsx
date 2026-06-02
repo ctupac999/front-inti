@@ -109,23 +109,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Bienvenida</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">¡Bienvenido/a, {{firstName}}!</h2>
-      <p style="color:#555;line-height:1.7">Tu cuenta en INTI fue creada exitosamente el <strong>{{registrationDate}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Ahora podés publicar tus productos, explorar lo que otros ofrecen y comenzar a intercambiar de manera justa y sustentable.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">¡Bienvenido/a, {{firstName}}!</h2>
+      <p style="color:#475467;line-height:1.8">Tu cuenta en INTI fue creada exitosamente el <strong>{{registrationDate}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Ahora podés publicar tus productos, explorar lo que otros ofrecen y comenzar a intercambiar de manera justa y sustentable.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ir a mi panel →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Ir a mi panel →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© {{registrationDate}} INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -137,23 +138,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>Welcome</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Field Barter</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Field Barter</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Welcome, {{firstName}}!</h2>
-      <p style="color:#555;line-height:1.7">Your INTI account was created on <strong>{{registrationDate}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">You can now list your products, explore what others offer and start trading in a fair and sustainable way.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Welcome, {{firstName}}!</h2>
+      <p style="color:#475467;line-height:1.8">Your INTI account was created on <strong>{{registrationDate}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">You can now list your products, explore what others offer and start trading in a fair and sustainable way.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Go to my dashboard →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Go to my dashboard →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">Questions? Contact us at <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Field Barter</p>
     </div>
   </div>
@@ -165,20 +167,21 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="pt">
 <head><meta charset="UTF-8"><title>Boas-vindas</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Troca do Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Troca do Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Bem-vindo(a), {{firstName}}!</h2>
-      <p style="color:#555;line-height:1.7">Sua conta no INTI foi criada em <strong>{{registrationDate}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Agora você pode publicar seus produtos, explorar o que outros oferecem e começar a trocar de forma justa e sustentável.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Bem-vindo(a), {{firstName}}!</h2>
+      <p style="color:#475467;line-height:1.8">Sua conta no INTI foi criada em <strong>{{registrationDate}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Agora você pode publicar seus produtos, explorar o que outros oferecem e começar a trocar de forma justa e sustentável.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ir ao painel →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Ir ao painel →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">Dúvidas? <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
   </div>
@@ -190,23 +193,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Bienvenida</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">¡Bienvenido/a, {{firstName}}!</h2>
-      <p style="color:#555;line-height:1.7">Tu cuenta en INTI fue creada exitosamente el <strong>{{registrationDate}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Ahora podés publicar tus productos, explorar lo que otros ofrecen y empezar a intercambiar de manera justa y sustentable.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">¡Bienvenido/a, {{firstName}}!</h2>
+      <p style="color:#475467;line-height:1.8">Tu cuenta en INTI fue creada exitosamente el <strong>{{registrationDate}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Ahora podés publicar tus productos, explorar lo que otros ofrecen y empezar a intercambiar de manera justa y sustentable.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ir a mi panel →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Ir a mi panel →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© {{registrationDate}} INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -218,23 +222,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="qu">
 <head><meta charset="UTF-8"><title>Allin Hamuqti</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Chakra Tinkuy</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Chakra Tinkuy</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Allin Hamuqti, {{firstName}}!</h2>
-      <p style="color:#555;line-height:1.7">Qam INTI-pi cuentayki <strong>{{registrationDate}}</strong>-pi allinmanta rurasqa.</p>
-      <p style="color:#555;line-height:1.7">Kunanmi atinki productosniykita riqsichiyta, wakin qunquriqkunata maskayta, allinmanta tinkuyta ima.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Allin Hamuqti, {{firstName}}!</h2>
+      <p style="color:#475467;line-height:1.8">Qam INTI-pi cuentayki <strong>{{registrationDate}}</strong>-pi allinmanta rurasqa.</p>
+      <p style="color:#475467;line-height:1.8">Kunanmi atinki productosniykita riqsichiyta, wakin qunquriqkunata maskayta, allinmanta tinkuyta ima.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Panelniyman Riy →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Panelniyman Riy →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">Tapukuykikunapaq: <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Chakra Tinkuy</p>
     </div>
   </div>
@@ -248,23 +253,25 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Recuperar contraseña</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Hola, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7">Recibimos una solicitud para restablecer la contraseña de tu cuenta <strong>{{email}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Hacé clic en el botón para crear una nueva contraseña. El enlace expira en <strong>{{expiresIn}}</strong>.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Hola, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8">Recibimos una solicitud para restablecer la contraseña de tu cuenta <strong>{{email}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Hacé clic en el botón para crear una nueva contraseña. El enlace expira en <strong>{{expiresIn}}</strong>.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{resetUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Restablecer contraseña →</a>
+        <a href="{{resetUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Restablecer contraseña →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">Si no solicitaste este cambio, ignorá este correo. Tu contraseña no será modificada.</p>
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -276,23 +283,25 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Recuperar contraseña</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Hola, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7">Recibimos una solicitud para restablecer la contraseña de tu cuenta <strong>{{email}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Hacé clic en el botón para crear una nueva contraseña. El enlace expira en <strong>{{expiresIn}}</strong>.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Hola, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8">Recibimos una solicitud para restablecer la contraseña de tu cuenta <strong>{{email}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Hacé clic en el botón para crear una nueva contraseña. El enlace expira en <strong>{{expiresIn}}</strong>.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{resetUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Restablecer contraseña →</a>
+        <a href="{{resetUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Restablecer contraseña →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">Si no pediste este cambio, ignorá este correo. Tu contraseña no va a ser modificada.</p>
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -304,23 +313,25 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>Reset password</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Field Barter</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Field Barter</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Hi, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7">We received a request to reset the password for your account <strong>{{email}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Click the button below to create a new password. The link expires in <strong>{{expiresIn}}</strong>.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Hi, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8">We received a request to reset the password for your account <strong>{{email}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Click the button below to create a new password. The link expires in <strong>{{expiresIn}}</strong>.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{resetUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Reset my password →</a>
+        <a href="{{resetUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Reset my password →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">If you didn't request this, you can safely ignore this email. Your password will not be changed.</p>
+      <p style="color:#999;font-size:12px;text-align:center">Questions? Contact us at <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Field Barter</p>
     </div>
   </div>
@@ -332,23 +343,25 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="pt">
 <head><meta charset="UTF-8"><title>Redefinir senha</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Troca do Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Troca do Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Olá, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7">Recebemos uma solicitação para redefinir a senha da sua conta <strong>{{email}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Clique no botão abaixo para criar uma nova senha. O link expira em <strong>{{expiresIn}}</strong>.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Olá, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8">Recebemos uma solicitação para redefinir a senha da sua conta <strong>{{email}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Clique no botão abaixo para criar uma nova senha. O link expira em <strong>{{expiresIn}}</strong>.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{resetUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Redefinir senha →</a>
+        <a href="{{resetUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Redefinir senha →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">Se você não solicitou isso, ignore este e-mail. Sua senha não será alterada.</p>
+      <p style="color:#999;font-size:12px;text-align:center">Dúvidas? <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Troca do Campo</p>
     </div>
   </div>
@@ -360,23 +373,25 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="qu">
 <head><meta charset="UTF-8"><title>Clave Tikray</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Chakra Tinkuy</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Chakra Tinkuy</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Napaykullayki, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7"><strong>{{email}}</strong> cuentaykipa claveykita tikrayta mañarqanki.</p>
-      <p style="color:#555;line-height:1.7">Botonta hatariy musuq claveta churanaypaq. Kay enlace <strong>{{expiresIn}}</strong>-kama kallpaniyuq.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Napaykullayki, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8"><strong>{{email}}</strong> cuentaykipa claveykita tikrayta mañarqanki.</p>
+      <p style="color:#475467;line-height:1.8">Botonta hatariy musuq claveta churanaypaq. Kay enlace <strong>{{expiresIn}}</strong>-kama kallpaniyuq.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{resetUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Claveyta Tikray →</a>
+        <a href="{{resetUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Claveyta Tikray →</a>
       </div>
-      <hr style="border:none;border-top:1px solid #e5e7eb;margin:32px 0">
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
       <p style="color:#999;font-size:12px;text-align:center">Mana qam mañarqankichu chayqa, kay correoyta saqiy. Claveyki mana tikrasqachu kanqa.</p>
+      <p style="color:#999;font-size:12px;text-align:center">Tapukuykikunapaq: <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Chakra Tinkuy</p>
     </div>
   </div>
@@ -390,29 +405,32 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Trueque aceptado</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px">
         <span style="font-size:48px">🤝</span>
       </div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">¡Tu trueque fue aceptado!</h2>
-      <p style="color:#555;line-height:1.7">Hola <strong>{{firstName}}</strong>, buenas noticias: <strong>{{counterpartName}}</strong> aceptó tu propuesta de trueque por <strong>{{productName}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Ahora pueden coordinar los detalles del intercambio directamente desde tu panel.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">¡Tu trueque fue aceptado!</h2>
+      <p style="color:#475467;line-height:1.8">Hola <strong>{{firstName}}</strong>, buenas noticias: <strong>{{counterpartName}}</strong> aceptó tu propuesta de trueque por <strong>{{productName}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Ahora pueden coordinar los detalles del intercambio directamente desde tu panel.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>N° de trueque:</strong> {{tradeId}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto:</strong> {{productName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Con:</strong> {{counterpartName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver mi trueque →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Ver mi trueque →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -424,27 +442,30 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Trueque aceptado</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🤝</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">¡Tu trueque fue aceptado!</h2>
-      <p style="color:#555;line-height:1.7">Hola <strong>{{firstName}}</strong>, buenas noticias: <strong>{{counterpartName}}</strong> aceptó tu propuesta de trueque por <strong>{{productName}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Ahora podés coordinar los detalles del intercambio directo desde tu panel.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">¡Tu trueque fue aceptado!</h2>
+      <p style="color:#475467;line-height:1.8">Hola <strong>{{firstName}}</strong>, buenas noticias: <strong>{{counterpartName}}</strong> aceptó tu propuesta de trueque por <strong>{{productName}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Ahora podés coordinar los detalles del intercambio directo desde tu panel.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>N° de trueque:</strong> {{tradeId}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto:</strong> {{productName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Con:</strong> {{counterpartName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver mi trueque →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Ver mi trueque →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -456,27 +477,30 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>Barter accepted</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Field Barter</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Field Barter</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🤝</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Your barter was accepted!</h2>
-      <p style="color:#555;line-height:1.7">Hi <strong>{{firstName}}</strong>, great news: <strong>{{counterpartName}}</strong> accepted your barter proposal for <strong>{{productName}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">You can now coordinate the exchange details directly from your dashboard.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">Your barter was accepted!</h2>
+      <p style="color:#475467;line-height:1.8">Hi <strong>{{firstName}}</strong>, great news: <strong>{{counterpartName}}</strong> accepted your barter proposal for <strong>{{productName}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">You can now coordinate the exchange details directly from your dashboard.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>Trade #:</strong> {{tradeId}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Product:</strong> {{productName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>With:</strong> {{counterpartName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">View my trade →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">View my trade →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Questions? Contact us at <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Field Barter</p>
     </div>
   </div>
@@ -488,27 +512,30 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="pt">
 <head><meta charset="UTF-8"><title>Troca aceita</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Troca do Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Troca do Campo</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🤝</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Sua troca foi aceita!</h2>
-      <p style="color:#555;line-height:1.7">Olá <strong>{{firstName}}</strong>, ótimas notícias: <strong>{{counterpartName}}</strong> aceitou sua proposta de troca por <strong>{{productName}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Agora você pode combinar os detalhes da troca diretamente pelo painel.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">Sua troca foi aceita!</h2>
+      <p style="color:#475467;line-height:1.8">Olá <strong>{{firstName}}</strong>, ótimas notícias: <strong>{{counterpartName}}</strong> aceitou sua proposta de troca por <strong>{{productName}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Agora você pode combinar os detalhes da troca diretamente pelo painel.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>N° da troca:</strong> {{tradeId}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Produto:</strong> {{productName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Com:</strong> {{counterpartName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver minha troca →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Ver minha troca →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Dúvidas? <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Troca do Campo</p>
     </div>
   </div>
@@ -520,27 +547,30 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="qu">
 <head><meta charset="UTF-8"><title>Tinkuy Chaskisqa</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Chakra Tinkuy</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Chakra Tinkuy</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🤝</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Tinkuykiqa Chaskisqam!</h2>
-      <p style="color:#555;line-height:1.7">Napaykullayki <strong>{{firstName}}</strong>, allin willaymi: <strong>{{counterpartName}}</strong> tinkuykita <strong>{{productName}}</strong>-manta chaskikurqan.</p>
-      <p style="color:#555;line-height:1.7">Kunanmi atinki tinkuy detallesninta panelniykipi rimanakuyta.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">Tinkuykiqa Chaskisqam!</h2>
+      <p style="color:#475467;line-height:1.8">Napaykullayki <strong>{{firstName}}</strong>, allin willaymi: <strong>{{counterpartName}}</strong> tinkuykita <strong>{{productName}}</strong>-manta chaskikurqan.</p>
+      <p style="color:#475467;line-height:1.8">Kunanmi atinki tinkuy detallesninta panelniykipi rimanakuyta.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>Tinkuy N°:</strong> {{tradeId}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto:</strong> {{productName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Pipim:</strong> {{counterpartName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Tinkuyta Rikuy →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Tinkuyta Rikuy →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Tapukuykikunapaq: <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Chakra Tinkuy</p>
     </div>
   </div>
@@ -554,21 +584,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Trueque no aceptado</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Hola, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7">Lamentablemente tu propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}) no fue aceptada esta vez.</p>
-      <p style="color:#555;line-height:1.7">No te desanimes — hay muchos más productores en la plataforma. Explorá nuevas oportunidades desde tu panel.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Hola, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8">Lamentablemente tu propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}) no fue aceptada esta vez.</p>
+      <p style="color:#475467;line-height:1.8">No te desanimes — hay muchos más productores en la plataforma. Explorá nuevas oportunidades desde tu panel.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Explorar productos →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Explorar productos →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -580,21 +613,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Trueque no aceptado</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Hola, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7">Lamentablemente tu propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}) no fue aceptada esta vez.</p>
-      <p style="color:#555;line-height:1.7">No te desanimés — hay muchos más productores en la plataforma. Explorá nuevas oportunidades desde tu panel.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Hola, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8">Lamentablemente tu propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}) no fue aceptada esta vez.</p>
+      <p style="color:#475467;line-height:1.8">No te desanimés — hay muchos más productores en la plataforma. Explorá nuevas oportunidades desde tu panel.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Explorar productos →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Explorar productos →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -606,21 +642,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>Barter not accepted</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Field Barter</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Field Barter</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Hi, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7">Unfortunately your barter proposal for <strong>{{productName}}</strong> (Trade #{{tradeId}}) was not accepted this time.</p>
-      <p style="color:#555;line-height:1.7">Don't give up — there are many more producers on the platform. Explore new opportunities from your dashboard.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Hi, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8">Unfortunately your barter proposal for <strong>{{productName}}</strong> (Trade #{{tradeId}}) was not accepted this time.</p>
+      <p style="color:#475467;line-height:1.8">Don't give up — there are many more producers on the platform. Explore new opportunities from your dashboard.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Explore products →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Explore products →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Questions? Contact us at <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Field Barter</p>
     </div>
   </div>
@@ -632,21 +671,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="pt">
 <head><meta charset="UTF-8"><title>Troca não aceita</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Troca do Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Troca do Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Olá, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7">Infelizmente sua proposta de troca por <strong>{{productName}}</strong> (N° {{tradeId}}) não foi aceita desta vez.</p>
-      <p style="color:#555;line-height:1.7">Não desanime — há muitos outros produtores na plataforma. Explore novas oportunidades pelo painel.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Olá, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8">Infelizmente sua proposta de troca por <strong>{{productName}}</strong> (N° {{tradeId}}) não foi aceita desta vez.</p>
+      <p style="color:#475467;line-height:1.8">Não desanime — há muitos outros produtores na plataforma. Explore novas oportunidades pelo painel.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Explorar produtos →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Explorar produtos →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Dúvidas? <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Troca do Campo</p>
     </div>
   </div>
@@ -658,21 +700,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="qu">
 <head><meta charset="UTF-8"><title>Tinkuy Mana Chaskisqa</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Chakra Tinkuy</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Chakra Tinkuy</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Napaykullayki, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7"><strong>{{productName}}</strong>-manta tinkuy mañakuyniyki (N° {{tradeId}}) mana chaskisqachu karqan.</p>
-      <p style="color:#555;line-height:1.7">Ama llakikuychu — astawanraq productorniyuqkuna plataformallipi tiyan. Musuq oportunidadesta panelniykipi maskay.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Napaykullayki, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8"><strong>{{productName}}</strong>-manta tinkuy mañakuyniyki (N° {{tradeId}}) mana chaskisqachu karqan.</p>
+      <p style="color:#475467;line-height:1.8">Ama llakikuychu — astawanraq productorniyuqkuna plataformallipi tiyan. Musuq oportunidadesta panelniykipi maskay.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Productosta Maskay →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Productosta Maskay →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Tapukuykikunapaq: <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Chakra Tinkuy</p>
     </div>
   </div>
@@ -686,26 +731,29 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Propuesta de trueque</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Nueva propuesta de trueque</h2>
-      <p style="color:#555;line-height:1.7">Hola <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> te envió una propuesta de trueque por <strong>{{productName}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Ingresá a tu panel para ver los detalles y responder.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">Nueva propuesta de trueque</h2>
+      <p style="color:#475467;line-height:1.8">Hola <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> te envió una propuesta de trueque por <strong>{{productName}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Ingresá a tu panel para ver los detalles y responder.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>De:</strong> {{proposerName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto solicitado:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver propuesta →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Ver propuesta →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -717,26 +765,29 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Propuesta de trueque</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Nueva propuesta de trueque</h2>
-      <p style="color:#555;line-height:1.7">Hola <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> te mandó una propuesta de trueque por <strong>{{productName}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Entrá a tu panel para ver los detalles y responder.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">Nueva propuesta de trueque</h2>
+      <p style="color:#475467;line-height:1.8">Hola <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> te mandó una propuesta de trueque por <strong>{{productName}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Entrá a tu panel para ver los detalles y responder.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>De:</strong> {{proposerName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto solicitado:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver propuesta →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Ver propuesta →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -748,26 +799,29 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>Trade proposal</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Field Barter</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Field Barter</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">New trade proposal</h2>
-      <p style="color:#555;line-height:1.7">Hi <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> sent you a trade proposal for <strong>{{productName}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Go to your dashboard to see the details and reply.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">New trade proposal</h2>
+      <p style="color:#475467;line-height:1.8">Hi <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> sent you a trade proposal for <strong>{{productName}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Go to your dashboard to see the details and reply.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>From:</strong> {{proposerName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Product requested:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">View proposal →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">View proposal →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Questions? Contact us at <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Field Barter</p>
     </div>
   </div>
@@ -779,26 +833,29 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="pt">
 <head><meta charset="UTF-8"><title>Proposta de troca</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Troca do Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Troca do Campo</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Nova proposta de troca</h2>
-      <p style="color:#555;line-height:1.7">Olá <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> enviou uma proposta de troca por <strong>{{productName}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Vá ao seu painel para ver os detalhes e responder.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">Nova proposta de troca</h2>
+      <p style="color:#475467;line-height:1.8">Olá <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> enviou uma proposta de troca por <strong>{{productName}}</strong>.</p>
+      <p style="color:#475467;line-height:1.8">Vá ao seu painel para ver os detalhes e responder.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>De:</strong> {{proposerName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Produto solicitado:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver proposta →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Ver proposta →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Dúvidas? <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Troca do Campo</p>
     </div>
   </div>
@@ -810,26 +867,29 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="qu">
 <head><meta charset="UTF-8"><title>Trueque mañakuy</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Chakra Tinkuy</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Chakra Tinkuy</p>
     </div>
     <div style="padding:40px">
       <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Musuq trueque mañakuy</h2>
-      <p style="color:#555;line-height:1.7">Napaykullayki <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> <strong>{{productName}}</strong>-manta trueque mañakullasunki.</p>
-      <p style="color:#555;line-height:1.7">Panelniykiman riy qawaykipaq kutichinaykipaq.</p>
-      <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700;text-align:center">Musuq trueque mañakuy</h2>
+      <p style="color:#475467;line-height:1.8">Napaykullayki <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> <strong>{{productName}}</strong>-manta trueque mañakullasunki.</p>
+      <p style="color:#475467;line-height:1.8">Panelniykiman riy qawaykipaq kutichinaykipaq.</p>
+      <div style="background:#f0faf5;border:1px solid #d5e8dd;border-radius:14px;padding:18px 24px;margin:24px 0">
         <p style="margin:0;color:#1b4332;font-size:13px"><strong>Manta:</strong> {{proposerName}}</p>
         <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Mañakusqa producto:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Mañakuyta qaway →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Mañakuyta qaway →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Tapukuykikunapaq: <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Chakra Tinkuy</p>
     </div>
   </div>
@@ -843,21 +903,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Trueque cancelado</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Hola, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> canceló la propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}).</p>
-      <p style="color:#555;line-height:1.7">No te preocupes, seguí explorando otros productos disponibles en la plataforma.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Hola, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8"><strong>{{proposerName}}</strong> canceló la propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}).</p>
+      <p style="color:#475467;line-height:1.8">No te preocupes, seguí explorando otros productos disponibles en la plataforma.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Seguir explorando →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Seguir explorando →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -869,21 +932,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="UTF-8"><title>Trueque cancelado</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Trueque del Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Hola, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> canceló la propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}).</p>
-      <p style="color:#555;line-height:1.7">No te preocupes, seguí explorando otros productos disponibles en la plataforma.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Hola, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8"><strong>{{proposerName}}</strong> canceló la propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}).</p>
+      <p style="color:#475467;line-height:1.8">No te preocupes, seguí explorando otros productos disponibles en la plataforma.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Seguir explorando →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Seguir explorando →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Si tenés dudas, escribinos a <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
     </div>
   </div>
@@ -895,21 +961,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><title>Trade cancelled</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Field Barter</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Field Barter</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Hi, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> cancelled the trade proposal for <strong>{{productName}}</strong> (Trade #{{tradeId}}).</p>
-      <p style="color:#555;line-height:1.7">Don't worry, keep exploring other products available on the platform.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Hi, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8"><strong>{{proposerName}}</strong> cancelled the trade proposal for <strong>{{productName}}</strong> (Trade #{{tradeId}}).</p>
+      <p style="color:#475467;line-height:1.8">Don't worry, keep exploring other products available on the platform.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Keep exploring →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Keep exploring →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Questions? Contact us at <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Field Barter</p>
     </div>
   </div>
@@ -921,21 +990,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="pt">
 <head><meta charset="UTF-8"><title>Troca cancelada</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Troca do Campo</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Troca do Campo</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Olá, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> cancelou a proposta de troca por <strong>{{productName}}</strong> (N° {{tradeId}}).</p>
-      <p style="color:#555;line-height:1.7">Não se preocupe, continue explorando outros produtos disponíveis na plataforma.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Olá, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8"><strong>{{proposerName}}</strong> cancelou a proposta de troca por <strong>{{productName}}</strong> (N° {{tradeId}}).</p>
+      <p style="color:#475467;line-height:1.8">Não se preocupe, continue explorando outros produtos disponíveis na plataforma.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Continuar explorando →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Continuar explorando →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Dúvidas? <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Troca do Campo</p>
     </div>
   </div>
@@ -947,21 +1019,24 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       html: `<!DOCTYPE html>
 <html lang="qu">
 <head><meta charset="UTF-8"><title>Trueque Kutichisqa</title></head>
-<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+<body style="font-family:'Segoe UI',system-ui,-apple-system,BlinkMacSystemFont,Arial,sans-serif;background:#f0f5ee;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
-    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
-      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
-      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Chakra Tinkuy</p>
+    <div style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);padding:40px 40px 36px;text-align:center">
+      <div style="font-size:48px;line-height:1;margin-bottom:12px">🌱</div>
+      <h1 style="color:#fff;margin:0;font-size:32px;font-weight:800;letter-spacing:-0.5px;text-shadow:0 1px 3px #00000030">INTI</h1>
+      <p style="color:#b7e4c7;margin:10px 0 0;font-size:15px;font-weight:500;letter-spacing:0.3px">Chakra Tinkuy</p>
     </div>
-    <div style="padding:40px">
-      <h2 style="color:#1b4332;margin:0 0 16px">Napaykullayki, {{firstName}}</h2>
-      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> <strong>{{productName}}</strong>-manta tinkuy mañakuyta (N° {{tradeId}}) kutichirqan.</p>
-      <p style="color:#555;line-height:1.7">Ama llakikuychu, hukkunata qawayta atillankipaq.</p>
+    <div style="padding:48px">
+      <h2 style="color:#1b4332;margin:0 0 16px;font-size:22px;font-weight:700">Napaykullayki, {{firstName}}</h2>
+      <p style="color:#475467;line-height:1.8"><strong>{{proposerName}}</strong> <strong>{{productName}}</strong>-manta tinkuy mañakuyta (N° {{tradeId}}) kutichirqan.</p>
+      <p style="color:#475467;line-height:1.8">Ama llakikuychu, hukkunata qawayta atillankipaq.</p>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Qawayta qallariy →</a>
+        <a href="{{dashboardUrl}}" style="background:linear-gradient(135deg,#1b6a4f,#2d8a5f);color:#fff;padding:14px 36px;border-radius:12px;text-decoration:none;font-weight:700;font-size:16px;display:inline-block;box-shadow:0 2px 8px #1b6a4f40">Qawayta qallariy →</a>
       </div>
+      <hr style="border:none;height:1px;background:linear-gradient(to right,transparent,#d0d5dd,transparent);margin:32px 0">
+      <p style="color:#999;font-size:12px;text-align:center">Tapukuykikunapaq: <a href="{{contactUrl}}" style="color:#2d6a4f">{{contactUrl}}</a></p>
     </div>
-    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+    <div style="background:#f0faf5;padding:20px 40px;text-align:center;border-top:1px solid #e0f0e5">
       <p style="color:#aaa;font-size:11px;margin:0">© INTI — Chakra Tinkuy</p>
     </div>
   </div>

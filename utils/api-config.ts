@@ -52,4 +52,7 @@ export const API_ROUTES = {
 
   // Legal
   legalVersion: '/legal/version',
+
+  // Contact
+  contact: '/contact',
 }
