@@ -6,12 +6,15 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import {
   Mail, Save, Trash2, Eye, EyeOff, ChevronLeft,
-  Code2, RefreshCw, Loader2,
+  Code2, RefreshCw, Loader2, Check, X, Settings2,
 } from 'lucide-react'
 import {
   getAllEmailTemplates,
   upsertEmailTemplate,
   deleteEmailTemplate,
+  getBccStatus,
+  setBccConfig,
+  deleteBccConfig,
   type EmailTemplate,
 } from '@/services/email-templates-service'
 
@@ -34,17 +37,19 @@ interface TemplateKey {
 const TEMPLATE_KEYS: TemplateKey[] = [
   { key: 'USER_REGISTRATION', group: 'Autenticación', label: 'Bienvenida / Registro' },
   { key: 'PASSWORD_RESET',    group: 'Autenticación', label: 'Recuperación de contraseña' },
+  { key: 'TRADE_PROPOSED',    group: 'Trueques',      label: 'Propuesta de trueque' },
   { key: 'TRADE_ACCEPTED',    group: 'Trueques',      label: 'Trueque aceptado' },
   { key: 'TRADE_REJECTED',    group: 'Trueques',      label: 'Trueque rechazado' },
-  { key: 'TRADE_COMPLETED',   group: 'Trueques',      label: 'Trueque completado' },
+  { key: 'TRADE_CANCELLED',   group: 'Trueques',      label: 'Trueque cancelado' },
 ]
 
 const KEY_PLACEHOLDERS: Record<string, string[]> = {
   USER_REGISTRATION: ['firstName', 'lastName', 'email', 'phone', 'dashboardUrl', 'loginUrl', 'websiteUrl', 'contactUrl', 'registrationDate'],
   PASSWORD_RESET:    ['firstName', 'email', 'resetUrl', 'expiresIn'],
-  TRADE_ACCEPTED:    ['firstName', 'tradeId', 'productName', 'counterpartName', 'dashboardUrl'],
-  TRADE_REJECTED:    ['firstName', 'tradeId', 'productName', 'dashboardUrl'],
-  TRADE_COMPLETED:   ['firstName', 'tradeId', 'productName', 'counterpartName', 'completedDate', 'dashboardUrl'],
+  TRADE_PROPOSED:    ['firstName', 'proposerName', 'tradeId', 'productName', 'dashboardUrl'],
+  TRADE_ACCEPTED:    ['firstName', 'counterpartName', 'tradeId', 'productName', 'dashboardUrl'],
+  TRADE_REJECTED:    ['firstName', 'counterpartName', 'tradeId', 'productName', 'dashboardUrl'],
+  TRADE_CANCELLED:   ['firstName', 'proposerName', 'tradeId', 'productName', 'dashboardUrl'],
 }
 
 const SAMPLE_VARS: Record<string, Record<string, string>> = {
@@ -65,6 +70,13 @@ const SAMPLE_VARS: Record<string, Record<string, string>> = {
     resetUrl: 'http://localhost:3000/auth/reset?token=abc123',
     expiresIn: '24 horas',
   },
+  TRADE_PROPOSED: {
+    firstName: 'Carlos',
+    proposerName: 'María González',
+    tradeId: 'TRD-0001',
+    productName: 'Tomates cherry',
+    dashboardUrl: 'http://localhost:3000/dashboard',
+  },
   TRADE_ACCEPTED: {
     firstName: 'María',
     tradeId: 'TRD-0001',
@@ -76,14 +88,14 @@ const SAMPLE_VARS: Record<string, Record<string, string>> = {
     firstName: 'María',
     tradeId: 'TRD-0001',
     productName: 'Tomates cherry',
+    counterpartName: 'Carlos López',
     dashboardUrl: 'http://localhost:3000/dashboard',
   },
-  TRADE_COMPLETED: {
-    firstName: 'María',
+  TRADE_CANCELLED: {
+    firstName: 'Carlos',
+    proposerName: 'María González',
     tradeId: 'TRD-0001',
     productName: 'Tomates cherry',
-    counterpartName: 'Carlos López',
-    completedDate: new Date().toLocaleDateString('es-AR', { year: 'numeric', month: 'long', day: 'numeric' }),
     dashboardUrl: 'http://localhost:3000/dashboard',
   },
 }
@@ -668,12 +680,12 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
 </html>`,
     },
   },
-  TRADE_COMPLETED: {
+  TRADE_PROPOSED: {
     es: {
-      subject: '¡Trueque completado con éxito! 🌱 — {{tradeId}}',
+      subject: '¡Te enviaron una propuesta de trueque! — {{tradeId}}',
       html: `<!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><title>Trueque completado</title></head>
+<head><meta charset="UTF-8"><title>Propuesta de trueque</title></head>
 <body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
     <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
@@ -681,18 +693,16 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
     </div>
     <div style="padding:40px">
-      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🎉</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">¡Trueque completado!</h2>
-      <p style="color:#555;line-height:1.7">Hola <strong>{{firstName}}</strong>, el trueque con <strong>{{counterpartName}}</strong> por <strong>{{productName}}</strong> fue completado el <strong>{{completedDate}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Gracias por ser parte de la comunidad INTI. Cada intercambio hace más fuerte nuestra red de productores.</p>
+      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
+      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Nueva propuesta de trueque</h2>
+      <p style="color:#555;line-height:1.7">Hola <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> te envió una propuesta de trueque por <strong>{{productName}}</strong>.</p>
+      <p style="color:#555;line-height:1.7">Ingresá a tu panel para ver los detalles y responder.</p>
       <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
-        <p style="margin:0;color:#1b4332;font-size:13px"><strong>N° de trueque:</strong> {{tradeId}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto:</strong> {{productName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Con:</strong> {{counterpartName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Fecha:</strong> {{completedDate}}</p>
+        <p style="margin:0;color:#1b4332;font-size:13px"><strong>De:</strong> {{proposerName}}</p>
+        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto solicitado:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver mi historial →</a>
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver propuesta →</a>
       </div>
     </div>
     <div style="background:#f0faf5;padding:16px 40px;text-align:center">
@@ -703,10 +713,10 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
 </html>`,
     },
     'es-ar': {
-      subject: '¡Trueque completado con éxito! 🌱 — {{tradeId}}',
+      subject: '¡Te mandaron una propuesta de trueque! — {{tradeId}}',
       html: `<!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><title>Trueque completado</title></head>
+<head><meta charset="UTF-8"><title>Propuesta de trueque</title></head>
 <body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
     <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
@@ -714,18 +724,16 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
     </div>
     <div style="padding:40px">
-      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🎉</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">¡Trueque completado!</h2>
-      <p style="color:#555;line-height:1.7">Hola <strong>{{firstName}}</strong>, el trueque con <strong>{{counterpartName}}</strong> por <strong>{{productName}}</strong> fue completado el <strong>{{completedDate}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Gracias por ser parte de la comunidad INTI. Cada intercambio hace más fuerte nuestra red de productores.</p>
+      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
+      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Nueva propuesta de trueque</h2>
+      <p style="color:#555;line-height:1.7">Hola <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> te mandó una propuesta de trueque por <strong>{{productName}}</strong>.</p>
+      <p style="color:#555;line-height:1.7">Entrá a tu panel para ver los detalles y responder.</p>
       <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
-        <p style="margin:0;color:#1b4332;font-size:13px"><strong>N° de trueque:</strong> {{tradeId}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto:</strong> {{productName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Con:</strong> {{counterpartName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Fecha:</strong> {{completedDate}}</p>
+        <p style="margin:0;color:#1b4332;font-size:13px"><strong>De:</strong> {{proposerName}}</p>
+        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto solicitado:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver mi historial →</a>
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver propuesta →</a>
       </div>
     </div>
     <div style="background:#f0faf5;padding:16px 40px;text-align:center">
@@ -736,10 +744,10 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
 </html>`,
     },
     en: {
-      subject: 'Trade completed successfully! 🌱 — {{tradeId}}',
+      subject: 'You received a trade proposal! — {{tradeId}}',
       html: `<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>Trade completed</title></head>
+<head><meta charset="UTF-8"><title>Trade proposal</title></head>
 <body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
     <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
@@ -747,18 +755,16 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Field Barter</p>
     </div>
     <div style="padding:40px">
-      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🎉</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Trade completed!</h2>
-      <p style="color:#555;line-height:1.7">Hi <strong>{{firstName}}</strong>, your trade with <strong>{{counterpartName}}</strong> for <strong>{{productName}}</strong> was completed on <strong>{{completedDate}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Thank you for being part of the INTI community. Every exchange strengthens our network of producers.</p>
+      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
+      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">New trade proposal</h2>
+      <p style="color:#555;line-height:1.7">Hi <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> sent you a trade proposal for <strong>{{productName}}</strong>.</p>
+      <p style="color:#555;line-height:1.7">Go to your dashboard to see the details and reply.</p>
       <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
-        <p style="margin:0;color:#1b4332;font-size:13px"><strong>Trade #:</strong> {{tradeId}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Product:</strong> {{productName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>With:</strong> {{counterpartName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Date:</strong> {{completedDate}}</p>
+        <p style="margin:0;color:#1b4332;font-size:13px"><strong>From:</strong> {{proposerName}}</p>
+        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Product requested:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">View my history →</a>
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">View proposal →</a>
       </div>
     </div>
     <div style="background:#f0faf5;padding:16px 40px;text-align:center">
@@ -769,10 +775,10 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
 </html>`,
     },
     pt: {
-      subject: 'Troca concluída com sucesso! 🌱 — {{tradeId}}',
+      subject: 'Você recebeu uma proposta de troca! — {{tradeId}}',
       html: `<!DOCTYPE html>
 <html lang="pt">
-<head><meta charset="UTF-8"><title>Troca concluída</title></head>
+<head><meta charset="UTF-8"><title>Proposta de troca</title></head>
 <body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
     <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
@@ -780,18 +786,16 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Troca do Campo</p>
     </div>
     <div style="padding:40px">
-      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🎉</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Troca concluída!</h2>
-      <p style="color:#555;line-height:1.7">Olá <strong>{{firstName}}</strong>, sua troca com <strong>{{counterpartName}}</strong> por <strong>{{productName}}</strong> foi concluída em <strong>{{completedDate}}</strong>.</p>
-      <p style="color:#555;line-height:1.7">Obrigado por fazer parte da comunidade INTI. Cada troca fortalece nossa rede de produtores.</p>
+      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
+      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Nova proposta de troca</h2>
+      <p style="color:#555;line-height:1.7">Olá <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> enviou uma proposta de troca por <strong>{{productName}}</strong>.</p>
+      <p style="color:#555;line-height:1.7">Vá ao seu painel para ver os detalhes e responder.</p>
       <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
-        <p style="margin:0;color:#1b4332;font-size:13px"><strong>N° da troca:</strong> {{tradeId}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Produto:</strong> {{productName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Com:</strong> {{counterpartName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Data:</strong> {{completedDate}}</p>
+        <p style="margin:0;color:#1b4332;font-size:13px"><strong>De:</strong> {{proposerName}}</p>
+        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Produto solicitado:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver meu histórico →</a>
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Ver proposta →</a>
       </div>
     </div>
     <div style="background:#f0faf5;padding:16px 40px;text-align:center">
@@ -802,10 +806,10 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
 </html>`,
     },
     qu: {
-      subject: 'Tinkuy Allinmanta Tukurirqan! 🌱 — {{tradeId}}',
+      subject: 'Trueque mañakusqanki chayamu! — {{tradeId}}',
       html: `<!DOCTYPE html>
 <html lang="qu">
-<head><meta charset="UTF-8"><title>Tinkuy Tukurirqan</title></head>
+<head><meta charset="UTF-8"><title>Trueque mañakuy</title></head>
 <body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
   <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
     <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
@@ -813,18 +817,148 @@ const DEFAULT_TEMPLATES: Record<string, Record<string, { subject: string; html: 
       <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Chakra Tinkuy</p>
     </div>
     <div style="padding:40px">
-      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">🎉</span></div>
-      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Tinkuy Tukurirqan!</h2>
-      <p style="color:#555;line-height:1.7">Napaykullayki <strong>{{firstName}}</strong>, <strong>{{counterpartName}}</strong>-wan <strong>{{productName}}</strong>-manta tinkuyniyki <strong>{{completedDate}}</strong>-pi allinmanta tukurirqan.</p>
-      <p style="color:#555;line-height:1.7">Yusulpayki INTI llaqtapi kayniykimanta. Sapa tinkuy kallpanchikun productorniyuqkunap redenta.</p>
+      <div style="text-align:center;margin-bottom:24px"><span style="font-size:48px">📩</span></div>
+      <h2 style="color:#1b4332;margin:0 0 16px;text-align:center">Musuq trueque mañakuy</h2>
+      <p style="color:#555;line-height:1.7">Napaykullayki <strong>{{firstName}}</strong>, <strong>{{proposerName}}</strong> <strong>{{productName}}</strong>-manta trueque mañakullasunki.</p>
+      <p style="color:#555;line-height:1.7">Panelniykiman riy qawaykipaq kutichinaykipaq.</p>
       <div style="background:#f0faf5;border-radius:12px;padding:16px 24px;margin:24px 0">
-        <p style="margin:0;color:#1b4332;font-size:13px"><strong>Tinkuy N°:</strong> {{tradeId}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Producto:</strong> {{productName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Pipim:</strong> {{counterpartName}}</p>
-        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>P'unchay:</strong> {{completedDate}}</p>
+        <p style="margin:0;color:#1b4332;font-size:13px"><strong>Manta:</strong> {{proposerName}}</p>
+        <p style="margin:8px 0 0;color:#1b4332;font-size:13px"><strong>Mañakusqa producto:</strong> {{productName}}</p>
       </div>
       <div style="text-align:center;margin:32px 0">
-        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Kawsayniyta Rikuy →</a>
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Mañakuyta qaway →</a>
+      </div>
+    </div>
+    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+      <p style="color:#aaa;font-size:11px;margin:0">© INTI — Chakra Tinkuy</p>
+    </div>
+  </div>
+</body>
+</html>`,
+    },
+  },
+  TRADE_CANCELLED: {
+    es: {
+      subject: 'Propuesta de trueque cancelada — {{tradeId}}',
+      html: `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Trueque cancelado</title></head>
+<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+  <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
+    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
+      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    </div>
+    <div style="padding:40px">
+      <h2 style="color:#1b4332;margin:0 0 16px">Hola, {{firstName}}</h2>
+      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> canceló la propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}).</p>
+      <p style="color:#555;line-height:1.7">No te preocupes, seguí explorando otros productos disponibles en la plataforma.</p>
+      <div style="text-align:center;margin:32px 0">
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Seguir explorando →</a>
+      </div>
+    </div>
+    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+      <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
+    </div>
+  </div>
+</body>
+</html>`,
+    },
+    'es-ar': {
+      subject: 'Propuesta de trueque cancelada — {{tradeId}}',
+      html: `<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><title>Trueque cancelado</title></head>
+<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+  <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
+    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
+      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Trueque del Campo</p>
+    </div>
+    <div style="padding:40px">
+      <h2 style="color:#1b4332;margin:0 0 16px">Hola, {{firstName}}</h2>
+      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> canceló la propuesta de trueque por <strong>{{productName}}</strong> (N° {{tradeId}}).</p>
+      <p style="color:#555;line-height:1.7">No te preocupes, seguí explorando otros productos disponibles en la plataforma.</p>
+      <div style="text-align:center;margin:32px 0">
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Seguir explorando →</a>
+      </div>
+    </div>
+    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+      <p style="color:#aaa;font-size:11px;margin:0">© INTI — Trueque del Campo</p>
+    </div>
+  </div>
+</body>
+</html>`,
+    },
+    en: {
+      subject: 'Trade proposal cancelled — {{tradeId}}',
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Trade cancelled</title></head>
+<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+  <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
+    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
+      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Field Barter</p>
+    </div>
+    <div style="padding:40px">
+      <h2 style="color:#1b4332;margin:0 0 16px">Hi, {{firstName}}</h2>
+      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> cancelled the trade proposal for <strong>{{productName}}</strong> (Trade #{{tradeId}}).</p>
+      <p style="color:#555;line-height:1.7">Don't worry, keep exploring other products available on the platform.</p>
+      <div style="text-align:center;margin:32px 0">
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Keep exploring →</a>
+      </div>
+    </div>
+    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+      <p style="color:#aaa;font-size:11px;margin:0">© INTI — Field Barter</p>
+    </div>
+  </div>
+</body>
+</html>`,
+    },
+    pt: {
+      subject: 'Proposta de troca cancelada — {{tradeId}}',
+      html: `<!DOCTYPE html>
+<html lang="pt">
+<head><meta charset="UTF-8"><title>Troca cancelada</title></head>
+<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+  <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
+    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
+      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Troca do Campo</p>
+    </div>
+    <div style="padding:40px">
+      <h2 style="color:#1b4332;margin:0 0 16px">Olá, {{firstName}}</h2>
+      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> cancelou a proposta de troca por <strong>{{productName}}</strong> (N° {{tradeId}}).</p>
+      <p style="color:#555;line-height:1.7">Não se preocupe, continue explorando outros produtos disponíveis na plataforma.</p>
+      <div style="text-align:center;margin:32px 0">
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Continuar explorando →</a>
+      </div>
+    </div>
+    <div style="background:#f0faf5;padding:16px 40px;text-align:center">
+      <p style="color:#aaa;font-size:11px;margin:0">© INTI — Troca do Campo</p>
+    </div>
+  </div>
+</body>
+</html>`,
+    },
+    qu: {
+      subject: 'Trueque mañakuy kutichisqa — {{tradeId}}',
+      html: `<!DOCTYPE html>
+<html lang="qu">
+<head><meta charset="UTF-8"><title>Trueque Kutichisqa</title></head>
+<body style="font-family:Arial,sans-serif;background:#f4f7f0;margin:0;padding:0">
+  <div style="max-width:600px;margin:32px auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px #0001">
+    <div style="background:#2d6a4f;padding:32px 40px;text-align:center">
+      <h1 style="color:#fff;margin:0;font-size:28px">🌱 INTI</h1>
+      <p style="color:#b7e4c7;margin:8px 0 0;font-size:14px">Chakra Tinkuy</p>
+    </div>
+    <div style="padding:40px">
+      <h2 style="color:#1b4332;margin:0 0 16px">Napaykullayki, {{firstName}}</h2>
+      <p style="color:#555;line-height:1.7"><strong>{{proposerName}}</strong> <strong>{{productName}}</strong>-manta tinkuy mañakuyta (N° {{tradeId}}) kutichirqan.</p>
+      <p style="color:#555;line-height:1.7">Ama llakikuychu, hukkunata qawayta atillankipaq.</p>
+      <div style="text-align:center;margin:32px 0">
+        <a href="{{dashboardUrl}}" style="background:#2d6a4f;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:bold;font-size:16px">Qawayta qallariy →</a>
       </div>
     </div>
     <div style="background:#f0faf5;padding:16px 40px;text-align:center">
@@ -855,6 +989,13 @@ export default function AdminEmailTemplatesPage() {
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
 
+  // BCC
+  const [bccStatus, setBccStatus] = useState<{ value: string; enabled: boolean } | null>(null)
+  const [bccLoading, setBccLoading] = useState(true)
+  const [bccEditing, setBccEditing] = useState(false)
+  const [bccEmail, setBccEmail] = useState('')
+  const [bccSaving, setBccSaving] = useState(false)
+
   // Preview
   const [previewHtml, setPreviewHtml] = useState<string | null>(null)
   const [previewing, setPreviewing] = useState(false)
@@ -880,6 +1021,62 @@ export default function AdminEmailTemplatesPage() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     if (isAdmin) fetchTemplates()
   }, [isAdmin, fetchTemplates])
+
+  const fetchBcc = useCallback(async () => {
+    try {
+      const status = await getBccStatus()
+      setBccStatus(status)
+      setBccEmail(status?.value ?? '')
+    } catch {
+      setBccStatus(null)
+    } finally {
+      setBccLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (isAdmin) fetchBcc()
+  }, [isAdmin, fetchBcc])
+
+  const handleBccSave = async () => {
+    setBccSaving(true)
+    try {
+      const updated = await setBccConfig(bccEmail, true)
+      setBccStatus(updated)
+      setBccEditing(false)
+      toast.success('Configuración BCC guardada')
+    } catch {
+      toast.error('Error al guardar configuración BCC')
+    } finally {
+      setBccSaving(false)
+    }
+  }
+
+  const handleBccToggle = async () => {
+    if (!bccStatus) return
+    const nextEnabled = !bccStatus.enabled
+    try {
+      const updated = await setBccConfig(bccStatus.value, nextEnabled)
+      setBccStatus(updated)
+      toast.success(nextEnabled ? 'BCC activado' : 'BCC desactivado')
+    } catch {
+      toast.error('Error al cambiar estado BCC')
+    }
+  }
+
+  const handleBccDelete = async () => {
+    if (!confirm('¿Eliminar configuración BCC?')) return
+    try {
+      await deleteBccConfig()
+      setBccStatus(null)
+      setBccEmail('')
+      setBccEditing(false)
+      toast.success('Configuración BCC eliminada')
+    } catch {
+      toast.error('Error al eliminar configuración BCC')
+    }
+  }
 
   const hasTemplate = (key: string, locale: string) =>
     templates.some((t) => t.key === key && t.locale === locale)
@@ -1009,6 +1206,134 @@ export default function AdminEmailTemplatesPage() {
           </button>
         </div>
       </div>
+
+      {/* ─── BCC Admin Banner ──────────────────────────────────────────────── */}
+      {bccLoading ? (
+        <div className="mb-6 rounded-2xl border bg-gray-50 p-4 flex items-center gap-3">
+          <Loader2 className="h-5 w-5 animate-spin text-gray-400" />
+          <span className="text-sm text-gray-500">Cargando configuración BCC...</span>
+        </div>
+      ) : (
+        <div className={`mb-6 rounded-2xl border p-4 ${
+          !bccStatus?.value
+            ? 'bg-gray-50 border-gray-200'
+            : bccStatus.enabled
+              ? 'bg-green-50 border-green-200'
+              : 'bg-amber-50 border-amber-200'
+        }`}>
+          <div className="flex items-center justify-between flex-wrap gap-3">
+            <div className="flex items-center gap-3">
+              <div className={`p-1.5 rounded-lg ${
+                !bccStatus?.value
+                  ? 'bg-gray-200 text-gray-600'
+                  : bccStatus.enabled
+                    ? 'bg-green-200 text-green-700'
+                    : 'bg-amber-200 text-amber-700'
+              }`}>
+                <Settings2 className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-gray-900">Copia Oculta (BCC)</p>
+                <p className="text-xs text-gray-500">
+                  {!bccStatus?.value
+                    ? 'No configurado'
+                    : bccStatus.enabled
+                      ? `Enviando copia a: ${bccStatus.value}`
+                      : `${bccStatus.value} (desactivado)`}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {bccEditing ? (
+                <>
+                  <input
+                    type="email"
+                    value={bccEmail}
+                    onChange={(e) => setBccEmail(e.target.value)}
+                    placeholder="admin@ejemplo.com"
+                    className="w-56 rounded-lg border border-gray-300 px-3 py-1.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100"
+                  />
+                  <button
+                    onClick={handleBccSave}
+                    disabled={bccSaving || !bccEmail.trim()}
+                    className="flex items-center gap-1 bg-green-600 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-60"
+                  >
+                    {bccSaving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Check className="h-3.5 w-3.5" />}
+                    Guardar
+                  </button>
+                  <button
+                    onClick={() => { setBccEditing(false); setBccEmail(bccStatus?.value ?? '') }}
+                    className="flex items-center gap-1 text-gray-500 text-xs px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                    Cancelar
+                  </button>
+                </>
+              ) : (
+                <>
+                  {bccStatus?.value && (
+                    <button
+                      onClick={handleBccToggle}
+                      className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors ${
+                        bccStatus.enabled
+                          ? 'bg-amber-100 text-amber-700 hover:bg-amber-200'
+                          : 'bg-green-100 text-green-700 hover:bg-green-200'
+                      }`}
+                    >
+                      {bccStatus.enabled ? 'Desactivar' : 'Activar'}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => setBccEditing(true)}
+                    className="text-xs px-3 py-1.5 rounded-lg bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+                  >
+                    {bccStatus?.value ? 'Cambiar' : 'Configurar'}
+                  </button>
+                  {bccStatus?.value && (
+                    <button
+                      onClick={handleBccDelete}
+                      className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Missing templates alert ──────────────────────────────────────── */}
+      {(() => {
+        const missing = groups.flatMap((group) =>
+          TEMPLATE_KEYS.filter((tk) => tk.group === group).flatMap((tk) => {
+            const missingLocales = LOCALES.filter((l) => !hasTemplate(tk.key, l.code))
+            return missingLocales.length > 0
+              ? [`${tk.label} (${missingLocales.map((l) => l.code).join(', ')})`]
+              : []
+          }),
+        )
+        if (missing.length === 0) return null
+        return (
+          <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 p-4">
+            <div className="flex items-start gap-3">
+              <div className="p-1 rounded-lg bg-amber-200 text-amber-700 shrink-0 mt-0.5">
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-amber-800">Faltan traducciones para algunos templates</p>
+                <ul className="mt-1 text-sm text-amber-700 list-disc list-inside">
+                  {missing.map((m) => <li key={m}>{m}</li>)}
+                </ul>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
 
       <div className="flex gap-6">
         {/* ─── Sidebar: template list ───────────────────────────────────────── */}

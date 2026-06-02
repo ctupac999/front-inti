@@ -29,9 +29,13 @@ const esAr: Record<string, string> = {
 
   // Auth - voseo
   'auth.login.subtitle': 'Ingres\u00e1 a tu cuenta',
+  'auth.login.forgotPassword': '\u00bfOlvidaste tu contrase\u00f1a?',
   'auth.login.noAccount': '\u00bfNo ten\u00e9s cuenta?',
   'auth.login.registerLink': 'Registrate gratis',
   'auth.register.hasAccount': '\u00bfYa ten\u00e9s cuenta?',
+  'auth.forgotPassword.emailLabel': 'Ingres\u00e1 tu email',
+  'auth.forgotPassword.successMessage': 'Revis\u00e1 tu bandeja de entrada para las instrucciones de recuperaci\u00f3n.',
+  'auth.resetPassword.redirectMessage': 'Ser\u00e1s redirigido al inicio de sesi\u00f3n en',
 
   // Product trade - voseo
   'product.trade.subtitle': 'Seleccion\u00e1 cu\u00e1l de tus productos ofrec\u00e9s a cambio de',

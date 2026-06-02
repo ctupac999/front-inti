@@ -7,6 +7,8 @@ export const API_ROUTES = {
   // Auth
   login: '/auth/login',
   register: '/auth/register',
+  forgotPassword: '/auth/forgot-password',
+  resetPassword: '/auth/reset-password',
 
   // Users
   me: '/users/me',
@@ -34,6 +36,7 @@ export const API_ROUTES = {
 
   // Email Templates
   emailTemplates: '/email-templates',
+  emailTemplatesBcc: '/email-templates/admin/bcc',
 
   // Product Classification
   productClassification: '/product-classification',

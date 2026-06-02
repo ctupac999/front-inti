@@ -7,7 +7,7 @@ vi.mock('@/utils/api', () => ({
   post: mockPost,
 }))
 
-const { login, register, getMe, logout } = await import('./auth-service')
+const { login, register, getMe, logout, forgotPassword, resetPassword } = await import('./auth-service')
 
 beforeEach(() => {
   mockGet.mockReset()
@@ -85,5 +85,32 @@ describe('logout', () => {
 
     expect(localStorage.getItem('token')).toBeNull()
     expect(localStorage.getItem('user')).toBeNull()
+  })
+})
+
+describe('forgotPassword', () => {
+  it('calls POST /auth/forgot-password with email', async () => {
+    mockPost.mockResolvedValue({ message: 'Si el email existe, recibirás un link de recuperación' })
+
+    const result = await forgotPassword('juan@test.com')
+
+    expect(mockPost).toHaveBeenCalledWith('/auth/forgot-password', {
+      email: 'juan@test.com',
+    })
+    expect(result).toEqual({ message: 'Si el email existe, recibirás un link de recuperación' })
+  })
+})
+
+describe('resetPassword', () => {
+  it('calls POST /auth/reset-password with token and newPassword', async () => {
+    mockPost.mockResolvedValue({ message: 'Contraseña restablecida con éxito' })
+
+    const result = await resetPassword('reset-token-123', 'newPass456')
+
+    expect(mockPost).toHaveBeenCalledWith('/auth/reset-password', {
+      token: 'reset-token-123',
+      newPassword: 'newPass456',
+    })
+    expect(result).toEqual({ message: 'Contraseña restablecida con éxito' })
   })
 })

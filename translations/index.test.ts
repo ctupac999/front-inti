@@ -32,4 +32,29 @@ describe('translations', () => {
       translations.es['home.hero.title1'],
     )
   })
+
+  it('has forgot and reset password keys in all locales', () => {
+    const requiredKeys = [
+      'auth.login.forgotPassword',
+      'auth.forgotPassword.title',
+      'auth.forgotPassword.emailLabel',
+      'auth.forgotPassword.submit',
+      'auth.forgotPassword.successTitle',
+      'auth.forgotPassword.successMessage',
+      'auth.forgotPassword.backToLogin',
+      'auth.forgotPassword.error',
+      'auth.resetPassword.title',
+      'auth.resetPassword.newPasswordLabel',
+      'auth.resetPassword.confirmPasswordLabel',
+      'auth.resetPassword.submit',
+      'auth.resetPassword.successTitle',
+      'auth.resetPassword.successMessage',
+      'auth.resetPassword.error',
+    ]
+    for (const locale of ['es', 'en', 'pt', 'qu'] as const) {
+      for (const key of requiredKeys) {
+        expect(translations[locale]).toHaveProperty(key)
+      }
+    }
+  })
 })

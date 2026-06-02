@@ -43,3 +43,21 @@ export async function previewEmailTemplate(
     vars,
   )
 }
+
+export async function getBccStatus(): Promise<{ value: string; enabled: boolean } | null> {
+  return get<{ value: string; enabled: boolean } | null>(API_ROUTES.emailTemplatesBcc)
+}
+
+export async function setBccConfig(
+  email: string,
+  enabled: boolean,
+): Promise<{ value: string; enabled: boolean }> {
+  return put<{ value: string; enabled: boolean }>(API_ROUTES.emailTemplatesBcc, {
+    email,
+    enabled,
+  })
+}
+
+export async function deleteBccConfig(): Promise<void> {
+  return del<void>(API_ROUTES.emailTemplatesBcc)
+}
