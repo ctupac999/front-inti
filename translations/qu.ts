@@ -218,6 +218,7 @@ const qu: Record<string, string> = {
   'admin.nav.productsSub': 'Tukuy mikhunakuna qhawariy',
   'admin.nav.trades': 'Aynikuna qhawariy',
   'admin.nav.tradesSub': 'Tukuy aynikunam',
+  'admin.nav.dashboard': 'Dashboard',
   'admin.nav.config': 'Llika churay',
   'admin.nav.configSub': 'Suti, resqi, willakuy...',
   'admin.nav.emailTemplates': 'Correo Plantillakuna',

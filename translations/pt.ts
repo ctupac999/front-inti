@@ -236,6 +236,7 @@ const pt: Record<string, string> = {
   'admin.nav.productsSub': 'Ver todos os produtos',
   'admin.nav.trades': 'Ver trocas',
   'admin.nav.tradesSub': 'Histórico de trocas',
+  'admin.nav.dashboard': 'Dashboard',
   'admin.nav.config': 'Config do site',
   'admin.nav.configSub': 'Nome, logo, contato...',
   'admin.nav.emailTemplates': 'Modelos de E-mail',

@@ -16,6 +16,7 @@ describe('translations', () => {
       'home.hero.title1',
       'common.back',
       'legal.version',
+      'admin.nav.dashboard',
     ]
     for (const locale of ['es', 'en', 'pt', 'qu'] as const) {
       for (const key of requiredKeys) {
