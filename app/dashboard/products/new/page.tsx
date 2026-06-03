@@ -15,6 +15,7 @@ import { useEffect } from 'react'
 import ProductImageUpload, { type ImageEntry } from '@/components/products/ProductImageUpload'
 import ProductClassifier from '@/components/products/ProductClassifier'
 import LocationFormArray from '@/components/products/LocationFormArray'
+import { DEFAULT_COUNTRY_CODE } from '@/config/location-catalog'
 
 const schema = z.object({
   title: z.string().min(3, 'Minimo 3 caracteres'),
