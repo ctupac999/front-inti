@@ -8,12 +8,23 @@ import { addLocation, removeLocation } from '@/services/user-service'
 import { toast } from 'sonner'
 import { ArrowLeft, Plus, Trash2, MapPin } from 'lucide-react'
 import Link from 'next/link'
+import {
+  FALLBACK_ENABLED_COUNTRY_CODES,
+  getCountryConfig,
+  getCountryOptions,
+  getMunicipalityOptions,
+  getRegionOptions,
+  DEFAULT_COUNTRY_CODE,
+} from '@/config/location-catalog'
+import { getSiteConfig } from '@/services/site-config-service'
 
 interface Location {
   _id?: string
   name: string
+  country?: string
   province: string
   municipality: string
+  community?: string
   coordinates?: { lat: number; lng: number }
 }
 
@@ -22,22 +33,64 @@ export default function LocationsPage() {
   const { t } = useLanguage()
   const router = useRouter()
   const [showForm, setShowForm] = useState(false)
-  const [form, setForm] = useState({ name: '', province: '', municipality: '' })
+  const [form, setForm] = useState({
+    name: '',
+    country: DEFAULT_COUNTRY_CODE,
+    province: '',
+    municipality: '',
+    community: '',
+  })
   const [saving, setSaving] = useState(false)
+  const [enabledCountryCodes, setEnabledCountryCodes] = useState<string[]>(
+    FALLBACK_ENABLED_COUNTRY_CODES,
+  )
 
   const locations = (user?.locations || []) as Location[]
+  const countryOptions = getCountryOptions(enabledCountryCodes)
+  const resolvedCountry = countryOptions.some((c) => c.code === form.country)
+    ? form.country
+    : DEFAULT_COUNTRY_CODE
+  const config = getCountryConfig(resolvedCountry, enabledCountryCodes)
+  const regionOptions = getRegionOptions(resolvedCountry)
+  const municipalityOptions = getMunicipalityOptions(resolvedCountry, form.province)
 
   useEffect(() => {
     if (!loading && !user) router.push('/auth/login')
   }, [user, loading, router])
 
+  useEffect(() => {
+    let mounted = true
+    getSiteConfig()
+      .then((cfg) => {
+        if (!mounted) return
+        const fromAdmin = (cfg.enabledCountries ?? [])
+          .map((code) => code.trim().toUpperCase())
+          .filter(Boolean)
+        if (fromAdmin.length > 0) setEnabledCountryCodes(fromAdmin)
+      })
+      .catch(() => null)
+    return () => { mounted = false }
+  }, [])
+
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault()
     setSaving(true)
     try {
-      await addLocation(form)
+      await addLocation({
+        name: form.name,
+        country: resolvedCountry,
+        province: form.province,
+        municipality: form.municipality,
+        community: form.community || undefined,
+      })
       await refreshUser()
-      setForm({ name: '', province: '', municipality: '' })
+      setForm({
+        name: '',
+        country: DEFAULT_COUNTRY_CODE,
+        province: '',
+        municipality: '',
+        community: '',
+      })
       setShowForm(false)
       toast.success(t('locations.added'))
     } catch (err: unknown) {
@@ -93,22 +146,58 @@ export default function LocationsPage() {
               required
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-green-500"
             />
-            <div className="grid grid-cols-2 gap-3">
-              <input
-                placeholder={t('locations.province')}
-                value={form.province}
-                onChange={e => setForm(f => ({ ...f, province: e.target.value }))}
-                required
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-green-500"
-              />
-              <input
-                placeholder={t('locations.municipality')}
-                value={form.municipality}
-                onChange={e => setForm(f => ({ ...f, municipality: e.target.value }))}
-                required
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-green-500"
-              />
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">País</label>
+              <select
+                value={resolvedCountry}
+                onChange={e => {
+                  setForm(f => ({ ...f, country: e.target.value, province: '', municipality: '' }))
+                }}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-green-500 bg-white"
+              >
+                {countryOptions.map((c) => (
+                  <option key={c.code} value={c.code}>{c.name}</option>
+                ))}
+              </select>
             </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">{config.regionLabel}</label>
+                <input
+                  list="loc-province"
+                  placeholder={`Buscar ${config.regionLabel.toLowerCase()}...`}
+                  value={form.province}
+                  onChange={e => {
+                    setForm(f => ({ ...f, province: e.target.value, municipality: '' }))
+                  }}
+                  required
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-green-500"
+                />
+                <datalist id="loc-province">
+                  {regionOptions.map((r) => <option key={r} value={r} />)}
+                </datalist>
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">{config.municipalityLabel}</label>
+                <input
+                  list="loc-municipality"
+                  placeholder={`Buscar ${config.municipalityLabel.toLowerCase()}...`}
+                  value={form.municipality}
+                  onChange={e => setForm(f => ({ ...f, municipality: e.target.value }))}
+                  required
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-green-500"
+                />
+                <datalist id="loc-municipality">
+                  {municipalityOptions.map((m) => <option key={m} value={m} />)}
+                </datalist>
+              </div>
+            </div>
+            <input
+              placeholder="Distrito / Comunidad (opcional)"
+              value={form.community}
+              onChange={e => setForm(f => ({ ...f, community: e.target.value }))}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-green-500"
+            />
             <div className="flex gap-2">
               <button
                 type="button"
@@ -143,7 +232,11 @@ export default function LocationsPage() {
                   <MapPin className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="text-sm font-medium text-gray-900">{loc.name}</p>
-                    <p className="text-xs text-gray-500">{loc.municipality}, {loc.province}</p>
+                    <p className="text-xs text-gray-500">
+                      {loc.municipality}, {loc.province}
+                      {loc.country ? ` (${loc.country})` : ''}
+                      {loc.community ? ` · ${loc.community}` : ''}
+                    </p>
                   </div>
                 </div>
             {(loc._id || i >= 0) && (

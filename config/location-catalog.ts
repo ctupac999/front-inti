@@ -16,6 +16,11 @@ export interface CountryLocationConfig {
   regions: Record<string, string[]>
 }
 
+export interface PostalCodeEntry {
+  code: string
+  locality?: string
+}
+
 type CountryLabelConfig = Pick<
   CountryLocationConfig,
   'regionLabel' | 'municipalityLabel' | 'postalCodeLabel'
@@ -113,6 +118,16 @@ const DEFAULT_LABELS: CountryLabelConfig = {
   postalCodeLabel: 'Codigo postal',
 }
 
+const OFFICIAL_POSTAL_WEBSITES: Record<string, string> = {
+  PE: 'https://codigopostal.gob.pe',
+  AR: 'https://www.correoargentino.com.ar/formularios/codigo-postal',
+  CL: 'https://www.correos.cl/site/codigo-postal',
+  MX: 'https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/Descarga.aspx',
+  ES: 'https://www.correos.es/es/es/herramientas/codigos-postales',
+  BR: 'https://buscacepinter.correios.com.br/app/endereco/index.php',
+  CO: 'https://www.4-72.com.co/herramientas/codigo-postal/',
+}
+
 export const FALLBACK_ENABLED_COUNTRY_CODES = Object.keys(COUNTRY_NAME_OVERRIDES)
 
 const ALL_COUNTRIES = Country.getAllCountries()
@@ -155,6 +170,7 @@ function buildCountryOptions(enabledCountryCodes?: string[]): CountryOption[] {
 const countryOptions: CountryOption[] = buildCountryOptions()
 
 export const DEFAULT_COUNTRY_CODE: CountryCode = 'PE'
+
 function getResolvedDefaultCountryCode(options: CountryOption[]): CountryCode {
   return options.some((country) => country.code === DEFAULT_COUNTRY_CODE)
     ? DEFAULT_COUNTRY_CODE
@@ -166,6 +182,29 @@ export function getCountryOptions(enabledCountryCodes?: string[]): CountryOption
   return buildCountryOptions(enabledCountryCodes)
 }
 
+// Cache for region+municipality data per country to avoid O(n²) recomputation
+const regionsCache = new Map<string, Record<string, string[]>>()
+
+function buildRegionsMap(countryCode: string): Record<string, string[]> {
+  const states = State.getStatesOfCountry(countryCode)
+  const map: Record<string, string[]> = {}
+
+  for (const state of states) {
+    const regionName = state.name
+    if (!regionName) continue
+
+    const cities = City.getCitiesOfState(countryCode, state.isoCode)
+      .map((city) => city.name)
+      .filter(Boolean)
+
+    map[regionName] = Array.from(new Set(cities)).sort((a, b) =>
+      a.localeCompare(b, 'es'),
+    )
+  }
+
+  return map
+}
+
 export function getCountryConfig(code: string, enabledCountryCodes?: string[]): CountryLocationConfig {
   const options = getCountryOptions(enabledCountryCodes)
   const resolvedDefaultCode = getResolvedDefaultCountryCode(options)
@@ -174,12 +213,11 @@ export function getCountryConfig(code: string, enabledCountryCodes?: string[]): 
     options.find((country) => country.code === resolvedDefaultCode)
   const resolvedCode = option?.code ?? resolvedDefaultCode
   const labels = COUNTRY_LABEL_OVERRIDES[resolvedCode] ?? DEFAULT_LABELS
-  const regions = Object.fromEntries(
-    getRegionOptions(resolvedCode).map((regionName) => [
-      regionName,
-      getMunicipalityOptions(resolvedCode, regionName),
-    ]),
-  )
+
+  if (!regionsCache.has(resolvedCode)) {
+    regionsCache.set(resolvedCode, buildRegionsMap(resolvedCode))
+  }
+  const regions = regionsCache.get(resolvedCode)!
 
   return {
     code: resolvedCode,
@@ -213,10 +251,8 @@ export function isCountryCodeEnabled(
 }
 
 export function getRegionOptions(countryCode: string): string[] {
-  return State.getStatesOfCountry(countryCode)
-    .map((state) => state.name)
-    .filter(Boolean)
-    .sort((a, b) => a.localeCompare(b, 'es'))
+  const config = getCountryConfig(countryCode)
+  return Object.keys(config.regions)
 }
 
 export function getMunicipalityOptions(
@@ -224,18 +260,54 @@ export function getMunicipalityOptions(
   regionName: string,
 ): string[] {
   if (!regionName) return []
+  const config = getCountryConfig(countryCode)
+  return config.regions[regionName] ?? []
+}
 
-  const region = State.getStatesOfCountry(countryCode).find(
-    (state) => state.name.toLowerCase() === regionName.toLowerCase(),
+export function getCommunityOptions(
+  _countryCode: string,
+  _province: string,
+  _municipality: string,
+): string[] {
+  return []
+}
+
+// Lazy-loaded postal-code cache per country
+const postalCodeCache = new Map<string, Record<string, string[]>>()
+
+export async function getPostalCodesForMunicipality(
+  countryCode: string,
+  municipality: string,
+): Promise<PostalCodeEntry[]> {
+  if (!municipality) return []
+
+  if (!postalCodeCache.has(countryCode)) {
+    try {
+      const mod = await import(
+        /* webpackChunkName: "postal-codes" */ `@/config/postal-codes/${countryCode.toLowerCase()}.json`
+      )
+      postalCodeCache.set(countryCode, mod.default as Record<string, string[]>)
+    } catch {
+      postalCodeCache.set(countryCode, {})
+    }
+  }
+
+  const data = postalCodeCache.get(countryCode)!
+  const normalizedMunicipality = municipality.toLowerCase().trim()
+  const match = Object.entries(data).find(
+    ([key]) => key.toLowerCase().trim() === normalizedMunicipality,
   )
+  if (match) {
+    return match[1].map((code) => ({ code }))
+  }
 
-  if (!region) return []
-
-  const municipalities = City.getCitiesOfState(countryCode, region.isoCode)
-    .map((city) => city.name)
-    .filter(Boolean)
-
-  return Array.from(new Set(municipalities)).sort((a, b) =>
-    a.localeCompare(b, 'es'),
+  return Object.entries(data).flatMap(([key, codes]) =>
+    key.toLowerCase().trim().includes(normalizedMunicipality)
+      ? codes.map((code) => ({ code, locality: key }))
+      : [],
   )
+}
+
+export function getOfficialPostalWebsite(countryCode: string): string | null {
+  return OFFICIAL_POSTAL_WEBSITES[countryCode] ?? null
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { getProducts, type FilterParams } from '@/services/product-service'
-import type { Product } from '@/types/product'
+import type { Product, ProductLocation } from '@/types/product'
 import { CATEGORY_LABELS } from '@/types/product'
 import { useLanguage } from '@/contexts/language-context'
 import { Search, MapPin, Leaf } from 'lucide-react'
@@ -116,8 +116,15 @@ export default function ProductsPage() {
                   <span className="text-xs text-emerald-600 font-medium">Organico</span>
                 )}
                 <div className="flex items-center gap-1 mt-2 text-xs text-gray-400">
-                  <MapPin className="h-3 w-3" />
-                  {p.location.municipality}, {p.location.province}
+                  <MapPin className="h-3 w-3 flex-shrink-0" />
+                  {(p as Product & { locations?: ProductLocation[] }).locations
+                    ? (p as Product & { locations?: ProductLocation[] }).locations!.map((loc, i) => (
+                        <span key={i}>
+                          {i > 0 && ', '}
+                          {loc.municipality}, {loc.province}
+                        </span>
+                      ))
+                    : `${(p as Product & { location?: ProductLocation }).location?.municipality || ''}, ${(p as Product & { location?: ProductLocation }).location?.province || ''}`}
                 </div>
                 <div className="mt-3 pt-3 border-t flex items-center gap-2">
                   <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center text-xs font-bold text-green-700">

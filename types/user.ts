@@ -20,8 +20,10 @@ export interface User {
 
 export interface Location {
   name: string
+  country?: string
   province: string
   municipality: string
+  community?: string
   address?: string
   coordinates?: { lat: number; lng: number }
 }

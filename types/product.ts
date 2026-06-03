@@ -20,6 +20,15 @@ export interface ProductImage {
   objectPosition?: string
 }
 
+export interface ProductLocation {
+  name: string
+  country?: string
+  province: string
+  municipality: string
+  community?: string
+  postalCode?: string
+}
+
 export interface Product {
   _id: string
   title: string
@@ -33,14 +42,9 @@ export interface Product {
     firstName: string
     lastName: string
     avatar?: string
+    locations?: ProductLocation[]
   }
-  location: {
-    name: string
-    country?: string
-    province: string
-    municipality: string
-    postalCode?: string
-  }
+  locations: ProductLocation[]
   status: ProductStatus
   lookingFor: string[]
   isOrganic: boolean

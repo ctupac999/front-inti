@@ -7,7 +7,7 @@ import { getMyProducts } from '@/services/product-service'
 import { proposeTrade } from '@/services/trade-service'
 import { useAuth } from '@/contexts/auth-context'
 import { useLanguage } from '@/contexts/language-context'
-import { Product, CATEGORY_LABELS } from '@/types/product'
+import { Product, ProductLocation, CATEGORY_LABELS } from '@/types/product'
 import { toast } from 'sonner'
 import { MapPin, Leaf, Eye, ArrowLeft, X } from 'lucide-react'
 import Link from 'next/link'
@@ -126,10 +126,20 @@ export default function ProductDetailPage() {
                   {CATEGORY_LABELS[product.category as keyof typeof CATEGORY_LABELS] || product.category}
                 </span>
                 <h1 className="text-2xl font-bold text-gray-900 mt-2">{product.title}</h1>
-                <p className="text-gray-500 text-sm mt-1 flex items-center gap-1">
-                  <MapPin className="h-3 w-3" />
-                  {product.location.name}, {product.location.province}
-                </p>
+                <div className="text-gray-500 text-sm mt-1 space-y-0.5">
+                  {(product as Product & { locations?: ProductLocation[] }).locations?.map((loc, i) => (
+                    <p key={i} className="flex items-center gap-1">
+                      <MapPin className="h-3 w-3 flex-shrink-0" />
+                      {loc.name} &mdash; {loc.municipality}, {loc.province}
+                    </p>
+                  ))}
+                  {(product as Product & { location?: ProductLocation }).location && !(product as Product & { locations?: ProductLocation[] }).locations && (
+                    <p className="flex items-center gap-1">
+                      <MapPin className="h-3 w-3" />
+                      {(product as Product & { location?: ProductLocation }).location!.name}, {(product as Product & { location?: ProductLocation }).location!.province}
+                    </p>
+                  )}
+                </div>
               </div>
               <div className="text-right">
                 <p className="text-xl font-bold text-green-600">{product.quantity} {product.unit}</p>

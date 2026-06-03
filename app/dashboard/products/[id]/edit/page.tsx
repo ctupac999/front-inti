@@ -1,28 +1,20 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/auth-context'
 import { getProduct, updateProduct, removeProductImage } from '@/services/product-service'
-import { CATEGORY_LABELS, UNIT_OPTIONS, type Product } from '@/types/product'
+import { CATEGORY_LABELS, UNIT_OPTIONS, type Product, type ProductLocation } from '@/types/product'
 import { toast } from 'sonner'
 import { ArrowLeft, Upload, Leaf, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import ProductImageUpload, { type ImageEntry } from '@/components/products/ProductImageUpload'
-import { getSiteConfig } from '@/services/site-config-service'
-import {
-  DEFAULT_COUNTRY_CODE,
-  FALLBACK_ENABLED_COUNTRY_CODES,
-  getCountryConfig,
-  getCountryOptions,
-  getMunicipalityOptions,
-  getRegionOptions,
-  isCountryCodeEnabled,
-} from '@/config/location-catalog'
+import LocationFormArray from '@/components/products/LocationFormArray'
+import { DEFAULT_COUNTRY_CODE } from '@/config/location-catalog'
 
 const schema = z.object({
   title: z.string().min(3, 'Mínimo 3 caracteres'),
@@ -30,11 +22,6 @@ const schema = z.object({
   category: z.string().min(1, 'Seleccioná una categoría'),
   quantity: z.string().min(1, 'Ingresá la cantidad'),
   unit: z.string().min(1, 'Seleccioná la unidad'),
-  locationName: z.string().min(1, 'Nombre del lugar requerido'),
-  locationCountry: z.string().min(1, 'Pais requerido'),
-  locationProvince: z.string().min(1, 'Provincia requerida'),
-  locationMunicipality: z.string().min(1, 'Municipio requerido'),
-  locationPostalCode: z.string().optional(),
   isOrganic: z.boolean().optional(),
   harvestDate: z.string().optional(),
   status: z.string().optional(),
@@ -53,55 +40,15 @@ export default function EditProductPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [showOtros, setShowOtros] = useState(false)
   const [otrosText, setOtrosText] = useState('')
-  const [enabledCountryCodes, setEnabledCountryCodes] = useState<string[]>(
-    FALLBACK_ENABLED_COUNTRY_CODES,
-  )
-  const previousCountryRef = useRef<string | null>(null)
+  const [locations, setLocations] = useState<ProductLocation[]>([])
 
-  const { register, handleSubmit, reset, watch, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, reset, setValue, formState: { errors, isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
-
-  // eslint-disable-next-line react-hooks/incompatible-library
-  const selectedCountry = watch('locationCountry') || DEFAULT_COUNTRY_CODE
-  const selectedProvince = watch('locationProvince') || ''
-  const selectedMunicipality = watch('locationMunicipality') || ''
-  const countryOptions = getCountryOptions(enabledCountryCodes)
-  const defaultCountryCode = countryOptions.some(
-    (country) => country.code === DEFAULT_COUNTRY_CODE,
-  )
-    ? DEFAULT_COUNTRY_CODE
-    : (countryOptions[0]?.code ?? DEFAULT_COUNTRY_CODE)
-  const resolvedSelectedCountry = countryOptions.some(
-    (country) => country.code === selectedCountry,
-  )
-    ? selectedCountry
-    : defaultCountryCode
-  const countryConfig = getCountryConfig(resolvedSelectedCountry, enabledCountryCodes)
-  const regionOptions = getRegionOptions(resolvedSelectedCountry)
-  const municipalityOptions = getMunicipalityOptions(resolvedSelectedCountry, selectedProvince)
 
   useEffect(() => {
     if (!loading && !user) router.push('/auth/login')
   }, [user, loading, router])
-
-  useEffect(() => {
-    let isMounted = true
-
-    getSiteConfig()
-      .then((config) => {
-        if (!isMounted) return
-        const fromAdmin = (config.enabledCountries ?? [])
-          .map((code) => code.trim().toUpperCase())
-          .filter(Boolean)
-        if (fromAdmin.length > 0) setEnabledCountryCodes(fromAdmin)
-      })
-      .catch(() => null)
-
-    return () => {
-      isMounted = false
-    }
-  }, [])
 
   useEffect(() => {
     getProduct(id)
@@ -122,17 +69,23 @@ export default function EditProductPage() {
           setShowOtros(true)
           setOtrosText(otros.join(', '))
         }
+
+        const productLocations = (p as Product & { locations?: ProductLocation[] }).locations
+        if (productLocations && productLocations.length > 0) {
+          setLocations(productLocations)
+        } else {
+          const legacyLoc = (p as Product & { location?: ProductLocation }).location
+          if (legacyLoc) {
+            setLocations([{ ...legacyLoc, community: '', postalCode: legacyLoc.postalCode || '' }])
+          }
+        }
+
         reset({
           title: p.title,
           description: p.description,
           category: p.category,
           quantity: String(p.quantity),
           unit: p.unit,
-          locationName: p.location.name,
-          locationCountry: p.location.country || DEFAULT_COUNTRY_CODE,
-          locationProvince: p.location.province,
-          locationMunicipality: p.location.municipality,
-          locationPostalCode: p.location.postalCode || '',
           isOrganic: p.isOrganic,
           harvestDate: p.harvestDate ? p.harvestDate.split('T')[0] : '',
           status: p.status,
@@ -153,35 +106,6 @@ export default function EditProductPage() {
     }
   }, [fetching, product, user, router])
 
-  useEffect(() => {
-    if (!isCountryCodeEnabled(selectedCountry, enabledCountryCodes)) {
-      setValue('locationCountry', defaultCountryCode)
-    }
-  }, [selectedCountry, enabledCountryCodes, defaultCountryCode, setValue])
-
-  useEffect(() => {
-    if (previousCountryRef.current === null) {
-      previousCountryRef.current = resolvedSelectedCountry
-      return
-    }
-
-    if (previousCountryRef.current !== resolvedSelectedCountry) {
-      setValue('locationProvince', '')
-      setValue('locationMunicipality', '')
-      previousCountryRef.current = resolvedSelectedCountry
-    }
-  }, [resolvedSelectedCountry, setValue])
-
-  useEffect(() => {
-    const validMunicipalities = getMunicipalityOptions(
-      resolvedSelectedCountry,
-      selectedProvince,
-    )
-    if (selectedMunicipality && !validMunicipalities.includes(selectedMunicipality)) {
-      setValue('locationMunicipality', '')
-    }
-  }, [resolvedSelectedCountry, selectedProvince, selectedMunicipality, setValue])
-
   const handleRemoveExistingImage = async (publicId: string) => {
     if (!product) return
     setRemovingImage(publicId)
@@ -198,6 +122,18 @@ export default function EditProductPage() {
 
   const onSubmit = async (data: FormData) => {
     if (!product) return
+    if (locations.length === 0) {
+      toast.error('Agregá al menos una ubicación')
+      return
+    }
+    const invalidLoc = locations.find(
+      (l) => !l.name || !l.province || !l.municipality,
+    )
+    if (invalidLoc) {
+      toast.error('Completá nombre, provincia y municipio de todas las ubicaciones')
+      return
+    }
+
     try {
       const form = new FormData()
       form.append('title', data.title)
@@ -205,11 +141,7 @@ export default function EditProductPage() {
       form.append('category', data.category)
       form.append('quantity', String(data.quantity))
       form.append('unit', data.unit)
-      form.append('location[name]', data.locationName)
-      form.append('location[country]', resolvedSelectedCountry)
-      form.append('location[province]', data.locationProvince)
-      form.append('location[municipality]', data.locationMunicipality)
-      if (data.locationPostalCode) form.append('location[postalCode]', data.locationPostalCode)
+      form.append('locations', JSON.stringify(locations))
       const lookingForValues = [...selectedCategories]
       if (otrosText.trim()) lookingForValues.push(otrosText.trim())
       lookingForValues.forEach((val) => form.append('lookingFor', val))
@@ -253,7 +185,6 @@ export default function EditProductPage() {
             <Upload className="h-4 w-4" /> Fotos
           </h2>
 
-          {/* Existing images */}
           {product.images && product.images.length > 0 && (
             <div className="mb-4">
               <p className="text-xs text-gray-500 mb-2 font-medium">Imágenes actuales</p>
@@ -285,7 +216,6 @@ export default function EditProductPage() {
             </div>
           )}
 
-          {/* New images with position preview */}
           {maxNewImages > 0 && (
             <div>
               {product.images && product.images.length > 0 && (
@@ -433,46 +363,8 @@ export default function EditProductPage() {
           </div>
         </div>
 
-        {/* Ubicación */}
-        <div className="bg-white rounded-2xl border p-6 space-y-4">
-          <h2 className="font-semibold text-gray-900">Ubicación del producto</h2>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Nombre del lugar *</label>
-            <input {...register('locationName')} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
-            {errors.locationName && <p className="text-red-500 text-xs mt-1">{errors.locationName.message}</p>}
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Pais *</label>
-            <select {...register('locationCountry')} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 bg-white">
-              {countryOptions.map((country) => (
-                <option key={country.code} value={country.code}>{country.name}</option>
-              ))}
-            </select>
-            {errors.locationCountry && <p className="text-red-500 text-xs mt-1">{errors.locationCountry.message}</p>}
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{countryConfig.regionLabel} *</label>
-              <input list="edit-province-options" {...register('locationProvince')} placeholder={`Buscar ${countryConfig.regionLabel.toLowerCase()}...`} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
-              <datalist id="edit-province-options">
-                {regionOptions.map((region) => <option key={region} value={region} />)}
-              </datalist>
-              {errors.locationProvince && <p className="text-red-500 text-xs mt-1">{errors.locationProvince.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{countryConfig.municipalityLabel} *</label>
-              <input list="edit-municipality-options" {...register('locationMunicipality')} placeholder={`Buscar ${countryConfig.municipalityLabel.toLowerCase()}...`} className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
-              <datalist id="edit-municipality-options">
-                {municipalityOptions.map((municipality) => <option key={municipality} value={municipality} />)}
-              </datalist>
-              {errors.locationMunicipality && <p className="text-red-500 text-xs mt-1">{errors.locationMunicipality.message}</p>}
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">{countryConfig.postalCodeLabel} (opcional)</label>
-            <input {...register('locationPostalCode')} placeholder="Ej: 5500" className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100" />
-          </div>
-        </div>
+        {/* Ubicaciones */}
+        <LocationFormArray locations={locations} onChange={setLocations} />
 
         <div className="flex gap-3">
           <Link
