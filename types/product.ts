@@ -46,6 +46,7 @@ export interface Product {
   }
   locations: ProductLocation[]
   status: ProductStatus
+  reservedQuantity?: number
   lookingFor: string[]
   isOrganic: boolean
   harvestDate?: string

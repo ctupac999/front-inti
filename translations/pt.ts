@@ -119,6 +119,15 @@ const pt: Record<string, string> = {
   'product.trade.submitting': 'Enviando...',
   'product.trade.selectError': 'Selecione um produto para oferecer',
   'product.trade.success': 'Proposta enviada!',
+  'product.trade.offeredQuantity': 'Quantidade a oferecer',
+  'product.trade.requestedQuantity': 'Quanto você quer de',
+  'product.trade.available': 'Disponível: {quantity} {unit}',
+  'product.trade.onlyMessage': 'Só enviar mensagem (sem produto)',
+  'product.trade.messageRequired': 'Conte-nos o que gostaria de propor...',
+  'product.trade.noAvailable': 'Você não tem produtos disponíveis para oferecer.',
+  'product.trade.modifyStock': 'Modificar quantidade de',
+  'product.trade.quantityError': 'Excede a quantidade disponível',
+  'product.trade.yourProducts': 'Seus produtos disponíveis',
 
   // Dashboard
   'dashboard.greeting': 'Olá, {name}!',

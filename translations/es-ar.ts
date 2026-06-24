@@ -41,6 +41,15 @@ const esAr: Record<string, string> = {
   'product.trade.subtitle': 'Seleccion\u00e1 cu\u00e1l de tus productos ofrec\u00e9s a cambio de',
   'product.trade.noProducts': 'No ten\u00e9s productos publicados.',
   'product.trade.selectError': 'Seleccion\u00e1 un producto para ofrecer',
+  'product.trade.offeredQuantity': 'Cantidad a ofrecer',
+  'product.trade.requestedQuantity': '\u00bfCu\u00e1nto quer\u00e9s de',
+  'product.trade.available': 'Disponible: {quantity} {unit}',
+  'product.trade.onlyMessage': 'Solo enviar mensaje (sin producto)',
+  'product.trade.messageRequired': 'Contanos qu\u00e9 te gustar\u00eda proponer...',
+  'product.trade.noAvailable': 'No ten\u00e9s productos disponibles para ofrecer.',
+  'product.trade.modifyStock': 'Modificar cantidad de',
+  'product.trade.quantityError': 'Supera la cantidad disponible',
+  'product.trade.yourProducts': 'Tus productos disponibles',
 
   // Dashboard - voseo
   'dashboard.myProducts.empty': 'No ten\u00e9s productos publicados',

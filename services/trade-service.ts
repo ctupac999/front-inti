@@ -7,8 +7,10 @@ export async function getMyTrades(): Promise<Trade[]> {
 }
 
 export async function proposeTrade(data: {
-  offeredProduct: string
+  offeredProduct?: string
   requestedProduct: string
+  offeredQuantity?: number
+  requestedQuantity?: number
   message?: string
 }): Promise<Trade> {
   return post<Trade>(API_ROUTES.trades, data)

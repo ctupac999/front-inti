@@ -116,6 +116,15 @@ const qu: Record<string, string> = {
   'product.trade.submitting': 'Apachiykuchkani...',
   'product.trade.selectError': 'Imaykita akllay qunankipaq',
   'product.trade.success': 'Tinkuy apachisqa!',
+  'product.trade.offeredQuantity': 'Qunapaq cantidad',
+  'product.trade.requestedQuantity': 'Haykata munanquiman',
+  'product.trade.available': 'Tiyan: {quantity} {unit}',
+  'product.trade.onlyMessage': 'Willakuytalla apachiy (mana mikhunachu)',
+  'product.trade.messageRequired': 'Willakuway imata aynikunayki munanquiman...',
+  'product.trade.noAvailable': 'Mana tiyanchu qunapaq mikhunayki.',
+  'product.trade.modifyStock': 'Cantidadta tiyrachiy',
+  'product.trade.quantityError': 'Tiyan cantidadmanta aswan',
+  'product.trade.yourProducts': 'Qanpa mikhunayki tiyan',
 
   // Dashboard
   'dashboard.greeting': 'Napaykullayki, {name}!',

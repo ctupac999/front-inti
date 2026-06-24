@@ -6,9 +6,11 @@ export type TradeStatus = 'pending' | 'accepted' | 'rejected' | 'completed' | 'c
 export interface Trade {
   _id: string
   proposer: User
-  offeredProduct: Product
+  offeredProduct: Product | null
+  offeredQuantity?: number
   receiver: User
   requestedProduct: Product
+  requestedQuantity?: number
   status: TradeStatus
   message?: string
   responseMessage?: string

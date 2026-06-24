@@ -42,7 +42,7 @@ export default function ProductsPage() {
     <div className="container mx-auto max-w-6xl px-4 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">{t('products.title')}</h1>
-        <p className="text-gray-500 mt-1">{total} {t('products.subtitle')}</p>
+        <p className="text-gray-500 mt-1">{t('products.subtitle', { count: total })}</p>
       </div>
 
       {/* Filtros */}

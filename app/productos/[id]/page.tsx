@@ -9,9 +9,14 @@ import { useAuth } from '@/contexts/auth-context'
 import { useLanguage } from '@/contexts/language-context'
 import { Product, ProductLocation, CATEGORY_LABELS } from '@/types/product'
 import { toast } from 'sonner'
-import { MapPin, Leaf, Eye, ArrowLeft, X } from 'lucide-react'
-import Link from 'next/link'
+import { MapPin, Leaf, Eye, ArrowLeft, X, PenLine, Plus } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
+
+function getAvailableQty(p: Product): number {
+  if (p.status !== 'available') return 0
+  return p.quantity - (p.reservedQuantity ?? 0)
+}
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -23,8 +28,11 @@ export default function ProductDetailPage() {
   const [showTradeModal, setShowTradeModal] = useState(false)
   const [myProducts, setMyProducts] = useState<Product[]>([])
   const [selectedProduct, setSelectedProduct] = useState('')
+  const [offeredQty, setOfferedQty] = useState('0')
+  const [requestedQty, setRequestedQty] = useState('0')
   const [message, setMessage] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const [textOnly, setTextOnly] = useState(false)
 
   useEffect(() => {
     getProduct(id)
@@ -33,26 +41,93 @@ export default function ProductDetailPage() {
       .finally(() => setLoading(false))
   }, [id, t])
 
+  // Auto-abrir modal si vuelve de crear producto
+  useEffect(() => {
+    if (!user || loading) return
+    const returnTo = sessionStorage.getItem('returnTo')
+    if (returnTo === `/productos/${id}`) {
+      sessionStorage.removeItem('returnTo')
+      openTradeModal()
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, loading, id])
+
   const openTradeModal = async () => {
     if (!user) { router.push('/auth/login'); return }
     const prods = await getMyProducts()
-    setMyProducts(prods.filter((p: Product) => p._id !== id))
+    const available = prods.filter(
+      (p: Product) => p._id !== id && getAvailableQty(p) > 0,
+    )
+    setMyProducts(available)
+    setSelectedProduct('')
+    setOfferedQty('0')
+    setRequestedQty(String(product?.quantity ?? 0))
+    setMessage('')
+    setTextOnly(false)
     setShowTradeModal(true)
   }
 
+  const handleAddProduct = () => {
+    sessionStorage.setItem('returnTo', `/productos/${id}`)
+    router.push('/dashboard/products/new')
+  }
+
+  const handleProductSelect = (productId: string) => {
+    setSelectedProduct(productId)
+    const p = myProducts.find((x) => x._id === productId)
+    if (p) setOfferedQty(String(getAvailableQty(p)))
+  }
+
   const submitTrade = async () => {
-    if (!selectedProduct) { toast.error(t('product.trade.selectError')); return }
+    if (!product) return
+
+    if (textOnly) {
+      if (!message.trim()) {
+        toast.error(t('product.trade.messageRequired'))
+        return
+      }
+    } else {
+      if (!selectedProduct) {
+        toast.error(t('product.trade.selectError'))
+        return
+      }
+      if (!offeredQty || Number(offeredQty) <= 0) {
+        toast.error(t('product.trade.offeredQuantity'))
+        return
+      }
+      if (!requestedQty || Number(requestedQty) <= 0) {
+        toast.error(t('product.trade.requestedQuantity'))
+        return
+      }
+      const selectedP = myProducts.find((p) => p._id === selectedProduct)
+      const offeredQtyNum = Number(offeredQty)
+      if (selectedP && offeredQtyNum > getAvailableQty(selectedP)) {
+        toast.error(t('product.trade.quantityError'))
+        return
+      }
+    }
+
     setSubmitting(true)
     try {
-      await proposeTrade({
-        offeredProduct: selectedProduct,
+      const payload = {
+        ...(textOnly
+          ? {}
+          : {
+              offeredProduct: selectedProduct,
+              offeredQuantity: Number(offeredQty),
+            }),
         requestedProduct: id,
-        message,
-      })
+        ...(requestedQty && !textOnly ? { requestedQuantity: Number(requestedQty) } : {}),
+        message: message.trim() || undefined,
+      }
+      console.log('🔵 PAYLOAD ENVIADO:', JSON.stringify(payload, null, 2))
+      await proposeTrade(payload)
       toast.success(t('product.trade.success'))
       setShowTradeModal(false)
     } catch (err: unknown) {
-      toast.error(err instanceof Error && err.message ? err.message : 'Error al enviar propuesta')
+      const backendMsg = err instanceof Error ? err.message : ''
+      console.error('🔴 ERROR BACKEND:', backendMsg)
+      toast.error(backendMsg || 'Error al enviar la propuesta.')
     } finally {
       setSubmitting(false)
     }
@@ -89,6 +164,8 @@ export default function ProductDetailPage() {
                 src={product.images[0].url}
                 alt={product.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 768px"
+                priority
                 className="object-cover"
                 style={{ objectPosition: product.images[0].objectPosition || 'center center' }}
               />
@@ -111,6 +188,7 @@ export default function ProductDetailPage() {
                     src={img.url}
                     alt=""
                     fill
+                    sizes="64px"
                     className="object-cover"
                     style={{ objectPosition: img.objectPosition || 'center center' }}
                   />
@@ -182,13 +260,16 @@ export default function ProductDetailPage() {
             )}
 
             {/* CTA */}
-            {!isOwner && product.status === 'available' && (
+            {!isOwner && product.status === 'available' && getAvailableQty(product) > 0 && (
               <button
                 onClick={openTradeModal}
                 className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-colors"
               >
                 {t('product.proposeTrade')}
               </button>
+            )}
+            {!isOwner && product.status === 'available' && getAvailableQty(product) <= 0 && (
+              <p className="mt-6 text-center text-gray-400 text-sm">Producto sin disponibilidad</p>
             )}
             {isOwner && (
               <Link
@@ -205,57 +286,142 @@ export default function ProductDetailPage() {
       {/* Trade Modal */}
       {showTradeModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md p-6">
+          <div className="bg-white rounded-2xl w-full max-w-md p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-bold">{t('product.trade.title')}</h2>
               <button onClick={() => setShowTradeModal(false)}><X className="h-5 w-5 text-gray-400" /></button>
             </div>
             <p className="text-sm text-gray-500 mb-4">{t('product.trade.subtitle')} <strong>{product.title}</strong></p>
 
-            {myProducts.length === 0 ? (
-              <div className="text-center py-6">
-                <p className="text-gray-500 text-sm">{t('product.trade.noProducts')}</p>
-                <Link href="/dashboard/products/new" className="text-green-600 text-sm hover:underline mt-1 block">
-                  {t('product.trade.publishLink')}
-                </Link>
-              </div>
-            ) : (
+            {/* Requested quantity */}
+            <div className="mb-4">
+              <label className="text-sm font-medium text-gray-700 block mb-1">
+                {t('product.trade.requestedQuantity')} {product.title} ({product.unit})
+              </label>
+              <input
+                type="number"
+                min={1}
+                max={getAvailableQty(product)}
+                value={requestedQty}
+                onChange={(e) => setRequestedQty(e.target.value)}
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-green-500"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                {t('product.trade.available', { quantity: getAvailableQty(product), unit: product.unit })}
+              </p>
+            </div>
+
+            {/* Text-only toggle */}
+            <label className="flex items-center gap-2 mb-4 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={textOnly}
+                onChange={() => {
+                  setTextOnly(!textOnly)
+                  if (!textOnly) setSelectedProduct('')
+                }}
+                className="accent-green-600"
+              />
+              <span className="text-sm text-gray-600">{t('product.trade.onlyMessage')}</span>
+            </label>
+
+            {!textOnly && (
               <>
-                <div className="space-y-2 max-h-48 overflow-y-auto mb-4">
-                  {myProducts.map((p) => (
-                    <label key={p._id} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${selectedProduct === p._id ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'}`}>
-                      <input
-                        type="radio"
-                        name="offeredProduct"
-                        value={p._id}
-                        checked={selectedProduct === p._id}
-                        onChange={() => setSelectedProduct(p._id)}
-                        className="accent-green-600"
-                      />
-                      <div>
-                        <p className="text-sm font-medium">{p.title}</p>
-                        <p className="text-xs text-gray-500">{p.quantity} {p.unit}</p>
+                {/* Product selection */}
+                {myProducts.length > 0 ? (
+                  <>
+                    <p className="text-sm font-medium text-gray-700 mb-2">{t('product.trade.yourProducts')}</p>
+                    <div className="space-y-2 max-h-40 overflow-y-auto mb-4">
+                      {myProducts.map((p) => {
+                        const avail = getAvailableQty(p)
+                        return (
+                          <label key={p._id} className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors ${selectedProduct === p._id ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'}`}>
+                            <input
+                              type="radio"
+                              name="offeredProduct"
+                              value={p._id}
+                              checked={selectedProduct === p._id}
+                              onChange={() => handleProductSelect(p._id)}
+                              className="accent-green-600"
+                            />
+                            <div className="flex-1">
+                              <p className="text-sm font-medium">{p.title}</p>
+                              <p className="text-xs text-gray-500">{t('product.trade.available', { quantity: avail, unit: p.unit })}</p>
+                            </div>
+                          </label>
+                        )
+                      })}
+                    </div>
+
+                    {/* Offered quantity */}
+                    {selectedProduct && (
+                      <div className="mb-4">
+                        <label className="text-sm font-medium text-gray-700 block mb-1">
+                          {t('product.trade.offeredQuantity')}
+                        </label>
+                        <input
+                          type="number"
+                          min={1}
+                          max={(() => {
+                            const p = myProducts.find((x) => x._id === selectedProduct)
+                            return p ? getAvailableQty(p) : 0
+                          })()}
+                          value={offeredQty}
+                          onChange={(e) => setOfferedQty(e.target.value)}
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-green-500"
+                        />
                       </div>
-                    </label>
-                  ))}
-                </div>
+                    )}
 
-                <textarea
-                  placeholder={t('product.trade.messagePlaceholder')}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-none h-20 outline-none focus:border-green-500 mb-4"
-                />
-
-                <button
-                  onClick={submitTrade}
-                  disabled={submitting}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition-colors disabled:opacity-50"
-                >
-                  {submitting ? t('product.trade.submitting') : t('product.trade.submit')}
-                </button>
+                    {/* Quick actions */}
+                    <div className="flex gap-2 mb-4">
+                      <button
+                        onClick={handleAddProduct}
+                        className="flex items-center gap-1 text-xs text-green-600 hover:text-green-700"
+                      >
+                        <Plus className="h-3 w-3" /> {t('product.trade.publishLink')}
+                      </button>
+                      {selectedProduct && (
+                        <Link
+                          href={`/dashboard/products/${selectedProduct}/edit`}
+                          className="flex items-center gap-1 text-xs text-amber-600 hover:text-amber-700"
+                        >
+                          <PenLine className="h-3 w-3" /> {t('product.trade.modifyStock')} {myProducts.find((p) => p._id === selectedProduct)?.title}
+                        </Link>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-center py-4 mb-4">
+                    <p className="text-gray-500 text-sm mb-3">{t('product.trade.noAvailable')}</p>
+                    <div className="flex flex-col gap-2 items-center">
+                      <button
+                        onClick={handleAddProduct}
+                        className="text-green-600 text-sm hover:underline flex items-center gap-1"
+                      >
+                        <Plus className="h-3 w-3" /> {t('product.trade.publishLink')}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </>
             )}
+
+            {/* Message */}
+            <textarea
+              placeholder={textOnly ? t('product.trade.messageRequired') : t('product.trade.messagePlaceholder')}
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm resize-none h-20 outline-none focus:border-green-500 mb-4"
+            />
+
+            <button
+              onClick={submitTrade}
+              disabled={submitting}
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 rounded-xl transition-colors disabled:opacity-50"
+            >
+              {submitting ? t('product.trade.submitting') : t('product.trade.submit')}
+            </button>
           </div>
         </div>
       )}
