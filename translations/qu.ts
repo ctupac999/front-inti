@@ -126,6 +126,26 @@ const qu: Record<string, string> = {
   'product.trade.quantityError': 'Tiyan cantidadmanta aswan',
   'product.trade.yourProducts': 'Qanpa mikhunayki tiyan',
 
+  // Trade errors
+  'trade.error.validation': 'Wakin kamachiykuna manam allinchu. Qhawariy imaynatachus willakuykita.',
+  'trade.error.generic': 'Manam atillanichu ruwayta. Kutimuspa malliy.',
+  'trade.error.productNotFound': 'Mayllasqa mikhuna manam tarisqachu.',
+  'trade.error.selfTrade': 'Manam qikillawan ayniyta atinkichu.',
+  'trade.error.requestedNotAvailable': 'Mayllasqa mikhuna manam tiyanchu.',
+  'trade.error.requestedQtyExceeds': 'Mayllasqa cantidadqa tiyanmanta aswan.',
+  'trade.error.offeredNotFound': 'Qunasqa mikhuna manam tarisqachu.',
+  'trade.error.offeredNotOwned': 'Manam qanpachu qunasqa mikhuna.',
+  'trade.error.offeredNotAvailable': 'Qunasqa mikhuna manam tiyanchu.',
+  'trade.error.offeredQtyExceeds': 'Qunasqa cantidadqa tiyanmanta aswan.',
+  'trade.error.noMessage': 'Mana mikhunata quspataq, willakuway imata aynikunayki munanquiman.',
+  'trade.error.tradeNotFound': 'Ayni manam tarisqachu.',
+  'trade.error.cannotRespond': 'Manam kay ayniman kutichiyta atinkichu.',
+  'trade.error.alreadyResponded': 'Kay ayniqa kutichisqan.',
+  'trade.error.cancelNotOwner': 'Qallarichiqllam cancelayta atin.',
+  'trade.error.cancelNotPending': 'Suyakuchkaq aynikunallam cancelasqa kanman.',
+  'trade.error.notParticipant': 'Manam kay aynipi kankichu.',
+  'trade.error.notAccepted': 'Ayniqa chaskisqa kanan tiyan contactota qhawanaykipaq.',
+
   // Dashboard
   'dashboard.greeting': 'Napaykullayki, {name}!',
   'dashboard.welcome': 'Panelnikiyman kutimuykim',

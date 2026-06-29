@@ -129,6 +129,26 @@ const en: Record<string, string> = {
   'product.trade.quantityError': 'Exceeds available quantity',
   'product.trade.yourProducts': 'Your available products',
 
+  // Trade errors
+  'trade.error.validation': 'Some fields are not valid. Please check your data and try again.',
+  'trade.error.generic': 'Could not complete the operation. Please try again.',
+  'trade.error.productNotFound': 'The requested product was not found.',
+  'trade.error.selfTrade': 'Cannot trade with yourself.',
+  'trade.error.requestedNotAvailable': 'The requested product is not available.',
+  'trade.error.requestedQtyExceeds': 'The requested quantity exceeds available stock.',
+  'trade.error.offeredNotFound': 'The offered product was not found.',
+  'trade.error.offeredNotOwned': 'You do not own the offered product.',
+  'trade.error.offeredNotAvailable': 'The offered product is not available.',
+  'trade.error.offeredQtyExceeds': 'The offered quantity exceeds available stock.',
+  'trade.error.noMessage': 'If you do not offer a product, write a message for your proposal.',
+  'trade.error.tradeNotFound': 'Trade not found.',
+  'trade.error.cannotRespond': 'You cannot respond to this trade.',
+  'trade.error.alreadyResponded': 'The trade has already been responded.',
+  'trade.error.cancelNotOwner': 'Only the proposer can cancel.',
+  'trade.error.cancelNotPending': 'Only pending trades can be cancelled.',
+  'trade.error.notParticipant': 'You are not part of this trade.',
+  'trade.error.notAccepted': 'The trade must be accepted to view contact information.',
+
   // Dashboard
   'dashboard.greeting': 'Hello, {name}!',
   'dashboard.subtitle': 'Welcome to your trades panel',

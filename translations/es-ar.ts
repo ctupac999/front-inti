@@ -51,6 +51,26 @@ const esAr: Record<string, string> = {
   'product.trade.quantityError': 'Supera la cantidad disponible',
   'product.trade.yourProducts': 'Tus productos disponibles',
 
+  // Trade errors
+  'trade.error.validation': 'Algunos campos no son válidos. Revisá los datos e intentá de nuevo.',
+  'trade.error.generic': 'No se pudo completar la operación. Intentá de nuevo.',
+  'trade.error.productNotFound': 'El producto solicitado no fue encontrado.',
+  'trade.error.selfTrade': 'No podés hacer un trueque con vos mismo.',
+  'trade.error.requestedNotAvailable': 'El producto solicitado no está disponible.',
+  'trade.error.requestedQtyExceeds': 'La cantidad solicitada supera el stock disponible.',
+  'trade.error.offeredNotFound': 'El producto ofrecido no fue encontrado.',
+  'trade.error.offeredNotOwned': 'No sos dueño del producto que ofrecés.',
+  'trade.error.offeredNotAvailable': 'El producto ofrecido no está disponible.',
+  'trade.error.offeredQtyExceeds': 'La cantidad ofrecida supera el stock disponible.',
+  'trade.error.noMessage': 'Si no ofrecés un producto, escribí un mensaje para tu propuesta.',
+  'trade.error.tradeNotFound': 'Trueque no encontrado.',
+  'trade.error.cannotRespond': 'No podés responder a este trueque.',
+  'trade.error.alreadyResponded': 'El trueque ya fue respondido.',
+  'trade.error.cancelNotOwner': 'Solo el que propuso puede cancelar.',
+  'trade.error.cancelNotPending': 'Solo se pueden cancelar trueques pendientes.',
+  'trade.error.notParticipant': 'No participás en este trueque.',
+  'trade.error.notAccepted': 'El trueque debe estar aceptado para ver los datos de contacto.',
+
   // Dashboard - voseo
   'dashboard.myProducts.empty': 'No ten\u00e9s productos publicados',
 

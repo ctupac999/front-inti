@@ -129,6 +129,26 @@ const pt: Record<string, string> = {
   'product.trade.quantityError': 'Excede a quantidade disponível',
   'product.trade.yourProducts': 'Seus produtos disponíveis',
 
+  // Trade errors
+  'trade.error.validation': 'Alguns campos não são válidos. Verifique os dados e tente novamente.',
+  'trade.error.generic': 'Não foi possível completar a operação. Tente novamente.',
+  'trade.error.productNotFound': 'O produto solicitado não foi encontrado.',
+  'trade.error.selfTrade': 'Não pode fazer troca consigo mesmo.',
+  'trade.error.requestedNotAvailable': 'O produto solicitado não está disponível.',
+  'trade.error.requestedQtyExceeds': 'A quantidade solicitada excede o estoque disponível.',
+  'trade.error.offeredNotFound': 'O produto oferecido não foi encontrado.',
+  'trade.error.offeredNotOwned': 'Você não é dono do produto oferecido.',
+  'trade.error.offeredNotAvailable': 'O produto oferecido não está disponível.',
+  'trade.error.offeredQtyExceeds': 'A quantidade oferecida excede o estoque disponível.',
+  'trade.error.noMessage': 'Se você não oferecer um produto, escreva uma mensagem para sua proposta.',
+  'trade.error.tradeNotFound': 'Troca não encontrada.',
+  'trade.error.cannotRespond': 'Você não pode responder a esta troca.',
+  'trade.error.alreadyResponded': 'A troca já foi respondida.',
+  'trade.error.cancelNotOwner': 'Apenas quem propôs pode cancelar.',
+  'trade.error.cancelNotPending': 'Apenas trocas pendentes podem ser canceladas.',
+  'trade.error.notParticipant': 'Você não participa desta troca.',
+  'trade.error.notAccepted': 'A troca deve estar aceita para ver os dados de contato.',
+
   // Dashboard
   'dashboard.greeting': 'Olá, {name}!',
   'dashboard.subtitle': 'Bem-vindo ao seu painel de trocas',

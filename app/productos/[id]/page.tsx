@@ -120,14 +120,42 @@ export default function ProductDetailPage() {
         ...(requestedQty && !textOnly ? { requestedQuantity: Number(requestedQty) } : {}),
         message: message.trim() || undefined,
       }
-      console.log('🔵 PAYLOAD ENVIADO:', JSON.stringify(payload, null, 2))
       await proposeTrade(payload)
       toast.success(t('product.trade.success'))
       setShowTradeModal(false)
     } catch (err: unknown) {
-      const backendMsg = err instanceof Error ? err.message : ''
-      console.error('🔴 ERROR BACKEND:', backendMsg)
-      toast.error(backendMsg || 'Error al enviar la propuesta.')
+      const msg = err instanceof Error ? err.message : ''
+      const ERROR_MAP: Record<string, string> = {
+        'Requested product not found': 'trade.error.productNotFound',
+        'Cannot trade with yourself': 'trade.error.selfTrade',
+        'The requested product is not available': 'trade.error.requestedNotAvailable',
+        'Offered product not found': 'trade.error.offeredNotFound',
+        'You do not own the offered product': 'trade.error.offeredNotOwned',
+        'If you do not offer a product, write a message for your proposal': 'trade.error.noMessage',
+        'Trade not found': 'trade.error.tradeNotFound',
+        'You cannot respond to this trade': 'trade.error.cannotRespond',
+        'The trade has already been responded': 'trade.error.alreadyResponded',
+        'Only the proposer can cancel': 'trade.error.cancelNotOwner',
+        'Only pending trades can be cancelled': 'trade.error.cancelNotPending',
+        'You are not part of this trade': 'trade.error.notParticipant',
+        'The trade must be accepted to view contact information': 'trade.error.notAccepted',
+      }
+      const key = ERROR_MAP[msg]
+      if (key) {
+        toast.error(t(key))
+      } else if (msg.includes(' must be ') || msg.includes(' must not ')) {
+        toast.error(t('trade.error.validation'))
+      } else if (msg.startsWith('Only ')) {
+        toast.error(
+          msg.includes('requested product')
+            ? t('trade.error.requestedQtyExceeds')
+            : t('trade.error.offeredQtyExceeds'),
+        )
+      } else if (msg.endsWith(' is not available')) {
+        toast.error(t('trade.error.offeredNotAvailable'))
+      } else {
+        toast.error(t('trade.error.generic'))
+      }
     } finally {
       setSubmitting(false)
     }
