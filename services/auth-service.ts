@@ -3,12 +3,7 @@ import { API_ROUTES } from '@/utils/api-config'
 import type { AuthResponse, User } from '@/types/user'
 
 export async function login(email: string, password: string): Promise<AuthResponse> {
-  const res = await post<AuthResponse>(API_ROUTES.login, { email, password })
-  if (res.token) {
-    localStorage.setItem('token', res.token)
-    localStorage.setItem('user', JSON.stringify(res.user))
-  }
-  return res
+  return post<AuthResponse>(API_ROUTES.login, { email, password })
 }
 
 export async function register(data: {
@@ -22,12 +17,7 @@ export async function register(data: {
   legalVersion?: string
   marketingConsent?: boolean
 }): Promise<AuthResponse> {
-  const res = await post<AuthResponse>(API_ROUTES.register, data)
-  if (res.token) {
-    localStorage.setItem('token', res.token)
-    localStorage.setItem('user', JSON.stringify(res.user))
-  }
-  return res
+  return post<AuthResponse>(API_ROUTES.register, data)
 }
 
 export async function getMe(): Promise<User> {
@@ -40,9 +30,4 @@ export async function forgotPassword(email: string): Promise<{ message: string }
 
 export async function resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
   return post<{ message: string }>(API_ROUTES.resetPassword, { token, newPassword })
-}
-
-export function logout() {
-  localStorage.removeItem('token')
-  localStorage.removeItem('user')
 }

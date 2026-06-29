@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { jwtDecode } from 'jwt-decode'
-import { login as loginService, register as registerService, logout as logoutService, getMe } from '@/services/auth-service'
+import { login as loginService, register as registerService, getMe } from '@/services/auth-service'
 import type { User } from '@/types/user'
 
 interface AuthContextType {
@@ -37,20 +37,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (token) {
       try {
         const decoded = jwtDecode<{ exp?: number }>(token)
-        // Verificar expiración
         if (!decoded.exp || decoded.exp * 1000 < Date.now()) {
-          logoutService()
+          localStorage.removeItem('token')
+          localStorage.removeItem('user')
           // eslint-disable-next-line react-hooks/set-state-in-effect
           setLoading(false)
           return
         }
-        // Cargar usuario desde API
         getMe()
           .then(setUser)
-          .catch(() => logoutService())
+          .catch(() => {
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+          })
           .finally(() => setLoading(false))
       } catch {
-        logoutService()
+        localStorage.removeItem('token')
+        localStorage.removeItem('user')
         setLoading(false)
       }
     } else {
@@ -60,17 +63,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const res = await loginService(email, password)
+    localStorage.setItem('token', res.token)
+    localStorage.setItem('user', JSON.stringify(res.user))
     setUser(res.user)
     return res.user
   }
 
   const register = async (data: Parameters<typeof registerService>[0]) => {
     const res = await registerService(data)
+    localStorage.setItem('token', res.token)
+    localStorage.setItem('user', JSON.stringify(res.user))
     setUser(res.user)
   }
 
   const logout = () => {
-    logoutService()
+    localStorage.removeItem('token')
+    localStorage.removeItem('user')
     setUser(null)
   }
 
