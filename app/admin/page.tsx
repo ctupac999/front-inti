@@ -32,7 +32,7 @@ export default function AdminPage() {
     if (isAdmin) {
       get<DashboardStats>(API_ROUTES.adminDashboard)
         .then(setStats)
-        .catch(() => null)
+        .catch((err) => console.error('[Admin] Error al cargar dashboard:', err))
         .finally(() => setFetching(false))
     }
   }, [isAdmin])

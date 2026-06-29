@@ -14,7 +14,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     getSiteConfig()
       .then((cfg) => useSiteConfigStore.getState().setConfig(cfg))
-      .catch(() => null)
+      .catch((err) => console.error('[Providers] Error al cargar configuración:', err))
   }, [])
 
   return (

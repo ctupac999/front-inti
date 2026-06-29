@@ -29,7 +29,7 @@ export default function DashboardPage() {
     if (user) {
       Promise.all([getMyProducts(), getMyTrades()])
         .then(([p, t]) => { setProducts(p); setTrades(t) })
-        .catch(() => null)
+        .catch((err) => console.error('[Dashboard] Error al cargar datos:', err))
         .finally(() => setFetching(false))
     }
   }, [user])

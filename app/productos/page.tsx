@@ -26,8 +26,8 @@ export default function ProductsPage() {
       const res = await getProducts(f)
       setProducts(res.products)
       setTotal(res.total)
-    } catch {
-      /* empty */
+    } catch (err) {
+      console.error('[ProductsPage] Error al cargar productos:', err)
     } finally {
       setLoading(false)
     }
